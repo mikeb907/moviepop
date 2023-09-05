@@ -1,0 +1,179 @@
+/* Reset some default browser styles */
+body, h1, button {
+    margin: 0;
+    padding: 0;
+    font-family: 'Arial', sans-serif;
+}
+
+body {
+    background-color: #f4f4f4;
+    color: #333;
+    font-size: 16px;
+    line-height: 1.5;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;  /* Align to the top of the screen */
+    min-height: 100vh;
+    padding-top: 20px;  /* Provide some space at the top */
+}
+
+h1 {
+    background-color: #333;
+    color: #fff;
+    padding: 10px 0;
+    text-align: center;
+}
+
+#start-menu {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+button {
+    background-color: #007BFF;
+    border: none;
+    border-radius: 5px;
+    color: #fff;
+    cursor: pointer;
+    padding: 10px 15px;
+    font-size: 16px;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+.movie-still img {
+    width: 100%; 
+    height: auto; 
+    object-fit: cover; 
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.option-btn {
+    display: flex;
+    justify-content: space-between; /* This will push the title to the left and the number to the right */
+    align-items: center; /* Vertically center the content */
+    width: 100%;
+    margin: 5px 0;
+    border: 1px solid lightgrey;
+    background-color: white;
+    color: black;
+    transition: none; /* Remove transition effects */
+}
+
+.option-btn:hover {
+    background-color: white; /* Ensure the background remains the same on hover */
+    color: black; /* Ensure the text color remains the same on hover */
+}
+
+.option-btn .still-number {
+    display: inline-block;
+    width: 20px; /* Give it a fixed width so all numbers align neatly */
+    text-align: center;
+}
+
+
+.container {
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+    position: relative;
+}
+
+#navbar {
+    display: flex;
+    justify-content: center;
+    gap: 20px; /* Adjust as needed */
+    margin-bottom: 32px; /* Add padding between navbar and navigation controls */
+}
+
+#navbar button {
+    background: none;
+    color: black;
+    border: none;
+    text-decoration: underline;
+    cursor: pointer;
+    transition: none; /* Remove previous transition */
+}
+
+#navbar button:hover {
+    background-color: transparent; /* Remove hover effect */
+}
+
+.navigation-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.prev-arrow, .next-arrow {
+    width: 20px;
+    height: 20px;
+    color: darkgrey;
+    cursor: pointer;
+    vertical-align: middle; /* Align vertically */
+}
+
+#still-indicator {
+    font-weight: bold;
+    color: darkgrey;
+    margin: 0; /* Remove default margin */
+    vertical-align: middle; /* Align vertically */
+}
+
+#submit-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.arrow-btn {
+    background-color: lightgrey;
+    color: black;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 15px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.arrow-btn:hover {
+    background-color: #d4d4d4;
+}
+
+#submit-answers-btn[disabled] {
+    background-color: #ccc;
+}
+
+
+#home-menu {
+    text-align: center;
+    padding: 20px;
+}
+
+#home-menu h2 {
+    margin-bottom: 20px;
+}
+
+#home-menu button {
+    margin: 5px;
+    padding: 10px 20px;
+}
+
+/* On very large screens, you can increase the max-width to suit your design */
+@media (min-width: 1200px) {
+    .container {
+        max-width: 800px;
+    }
+}
