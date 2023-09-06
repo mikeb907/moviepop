@@ -4,15 +4,61 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center; /* Centers child elements vertically */
+    height: 100%; /* Takes the full height of the viewport */
     gap: 20px;
 }
 
-.menu-title h1 {
-    font-family: 'Bangers';
-    font-size: 48px;
+
+.menu-title {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%; /* This ensures that the .menu-title takes the full height of its parent */
+}
+
+
+.menu-title img {
+    width: 216px;
+}
+
+.date {
+    opacity: .4;
+}
+
+.menu-buttons {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;  /* Makes the buttons stretch to full width */
+    width: 100%;  /* Assumes you want the buttons to take full width of the .home-menu container */
 }
 
 .menu-buttons button {
-    margin: 5px;
-    padding: 10px 20px;
+    height: 56px;
+    border: none;
+    border-radius: 4px;
+    outline: none;
+    cursor: pointer;
+    background-color: #EBEBEB;  /* Default button color */
+    color: #5D5A51;
+    font-family: 'Roboto', sans-serif;
+    font-size: 16px;
+    font-weight:800;
+    margin: 5px 0;  /* Updated margin */
+    padding: 0;  /* Removed padding since we're now controlling height directly */
+    transition: background-color 0.3s;  /* Smoothens the hover effect */
+}
+
+.menu-buttons button:hover {
+    background-color: #d0d0d0;  /* Slightly darker on hover */
+}
+
+.menu-buttons button:first-child {
+    background-color: #6349FF;  /* Color for the "Start" button */
+    color: #fff;  /* Text color for the "Start" button */
+}
+
+.menu-buttons button:first-child:hover {
+    background-color: #5740E0;  /* Darker color for the "Start" button on hover */
 }
