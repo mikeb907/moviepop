@@ -1,0 +1,11 @@
+/* components/GameScreen/Navbar/Navbar.css */
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.close-btn {
+    /* Add styles for the close button here */
+}
