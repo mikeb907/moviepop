@@ -163,7 +163,10 @@ button:hover {
 }
 
 #home-menu h2 {
-    margin-bottom: 20px;
+    /* margin-bottom: 20px; */
+    font-family: 'Bangers', cursive;
+    font-size: 48px;
+
 }
 
 #home-menu button {
