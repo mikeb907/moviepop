@@ -13,12 +13,13 @@
     <div class="container">
         <!-- Home/Start Menu -->
         <div id="home-menu">
-            <h2>MoviePop</h2>
-            <button id="play-btn">Play</button>
+            <h2>Moviepop</h2>
+            <button id="start-game">Play</button>
             <button id="login-btn">Login</button>
             <button id="how-to-play-btn">How to Play</button>
         </div>
 
+        <!-- Game Screen -->
         <div id="game-screen" style="display: none;">
             <!-- Navbar -->
             <div id="navbar">
@@ -26,53 +27,42 @@
                 <button id="statistics-btn">Statistics</button>
                 <button id="settings-btn">Settings</button>
             </div>
-        
-            <!-- Movie Still Group 1 -->
-            <div class="movie-group" data-movie-number="1">
-                <div class="movie-still">
-                    <img src="https://film-grab.com/wp-content/uploads/2022/08/Dont-Breathe-2-049.jpg" alt="Movie Still">   
+            
+            <!-- Stills and Their Drop Zones -->
+            <div class="still-section">
+                <div class="movie-group active" data-movie-number="1">
+                    <div class="movie-still">
+                        <img src="https://film-grab.com/wp-content/uploads/2022/08/Dont-Breathe-2-049.jpg" alt="Movie Still 1">
+                        <div class="drop-zone" data-movie-number="1"></div>
+                    </div>
+                </div>
+                <div class="movie-group" data-movie-number="2">
+                    <div class="movie-still">
+                        <img src="https://film-grab.com/wp-content/uploads/2019/03/valk022.jpg" alt="Movie Still 2">
+                        <div class="drop-zone" data-movie-number="2"></div>
+                    </div>
+                </div>
+                <div class="movie-group" data-movie-number="3">
+                    <div class="movie-still">
+                        <img src="https://film-grab.com/wp-content/uploads/2023/03/Glass-Onion-19.jpg" alt="Movie Still 3">
+                        <div class="drop-zone" data-movie-number="3"></div>
+                    </div>
                 </div>
             </div>
-        
-            <!-- Movie Still Group 2 -->
-            <div class="movie-group" data-movie-number="2">
-                <div class="movie-still">
-                    <img src="https://film-grab.com/wp-content/uploads/2019/03/valk022.jpg" alt="Movie Still">           
-                </div>
-            </div>
-        
-            <!-- Movie Still Group 3 -->
-            <div class="movie-group" data-movie-number="3">
-                <div class="movie-still">
-                    <img src="https://film-grab.com/wp-content/uploads/2023/03/Glass-Onion-19.jpg" alt="Movie Still">
-                </div>
-            </div>
-        
-            <!-- Movie Options -->
+            
+            <!-- Titles to Drag -->
             <div class="options">
-                <button class="option-btn" data-option-number="1">Valkryie</button>
-                <button class="option-btn" data-option-number="2">Don't Breathe 2</button>
-                <button class="option-btn" data-option-number="3">Glass Onion</button>
+                <button class="option-btn draggable" draggable="true" data-option-number="1">Valkryie</button>
+                <button class="option-btn draggable" draggable="true" data-option-number="2">Don't Breathe 2</button>
+                <button class="option-btn draggable" draggable="true" data-option-number="3">Glass Onion</button>
             </div>
-        
-            <!-- Change or Submit Answers -->
+
+            <!-- Action Bar with Arrows and Submit Button -->
             <div id="submit-section">
-                <!-- Previous arrow button -->
                 <button class="arrow-btn prev-arrow-btn">&#8592;</button>
                 <button id="submit-answers-btn" disabled>Submit Answers</button>
-                <!-- Next arrow button -->
                 <button class="arrow-btn next-arrow-btn">&#8594;</button>
             </div>
-        </div>
-
-        <!-- Answer Sheet/Statistics -->
-        <div id="answer-sheet" style="display: none;">
-            <h3>Your Score: <span id="score">0</span></h3>
-            <p id="correct-answers">Correct Answers: </p>
-            <div id="statistics">
-                <!-- Statistics will be dynamically added here -->
-            </div>
-            <button id="share-score-btn">Share Score</button>
         </div>
     </div>
 

@@ -6,7 +6,7 @@ body, h1, button {
 }
 
 body {
-    background-color: #f4f4f4;
+    background-color: #E8E1CB;
     color: #333;
     font-size: 16px;
     line-height: 1.5;
@@ -24,29 +24,6 @@ h1 {
     text-align: center;
 }
 
-#start-menu {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
-    margin-top: 20px;
-}
-
-button {
-    background-color: #007BFF;
-    border: none;
-    border-radius: 5px;
-    color: #fff;
-    cursor: pointer;
-    padding: 10px 15px;
-    font-size: 16px;
-    transition: background-color 0.3s;
-}
-
-button:hover {
-    background-color: #0056b3;
-}
-
 .movie-still img {
     width: 100%; 
     height: auto; 
@@ -58,27 +35,19 @@ button:hover {
 
 .option-btn {
     display: flex;
-    justify-content: space-between; /* This will push the title to the left and the number to the right */
-    align-items: center; /* Vertically center the content */
+    justify-content: center;
     width: 100%;
     margin: 5px 0;
     border: 1px solid lightgrey;
     background-color: white;
     color: black;
-    transition: none; /* Remove transition effects */
+    transition: none;
+    cursor: grab;
 }
 
-.option-btn:hover {
-    background-color: white; /* Ensure the background remains the same on hover */
-    color: black; /* Ensure the text color remains the same on hover */
+.option-btn:active {
+    cursor: grabbing;
 }
-
-.option-btn .still-number {
-    display: inline-block;
-    width: 20px; /* Give it a fixed width so all numbers align neatly */
-    text-align: center;
-}
-
 
 .container {
     max-width: 500px;
@@ -92,8 +61,8 @@ button:hover {
 #navbar {
     display: flex;
     justify-content: center;
-    gap: 20px; /* Adjust as needed */
-    margin-bottom: 32px; /* Add padding between navbar and navigation controls */
+    gap: 20px;
+    margin-bottom: 32px;
 }
 
 #navbar button {
@@ -102,33 +71,7 @@ button:hover {
     border: none;
     text-decoration: underline;
     cursor: pointer;
-    transition: none; /* Remove previous transition */
-}
-
-#navbar button:hover {
-    background-color: transparent; /* Remove hover effect */
-}
-
-.navigation-controls {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 15px;
-}
-
-.prev-arrow, .next-arrow {
-    width: 20px;
-    height: 20px;
-    color: darkgrey;
-    cursor: pointer;
-    vertical-align: middle; /* Align vertically */
-}
-
-#still-indicator {
-    font-weight: bold;
-    color: darkgrey;
-    margin: 0; /* Remove default margin */
-    vertical-align: middle; /* Align vertically */
+    transition: none;
 }
 
 #submit-section {
@@ -156,17 +99,14 @@ button:hover {
     background-color: #ccc;
 }
 
-
 #home-menu {
     text-align: center;
     padding: 20px;
 }
 
 #home-menu h2 {
-    /* margin-bottom: 20px; */
     font-family: 'Bangers', cursive;
     font-size: 48px;
-
 }
 
 #home-menu button {
@@ -174,7 +114,26 @@ button:hover {
     padding: 10px 20px;
 }
 
-/* On very large screens, you can increase the max-width to suit your design */
+/* Styles for the drag-and-drop UI */
+.drop-zone {
+    border: 2px dashed #FFCDB2;
+    padding: 10px;
+    margin-top: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    text-align: center;
+    background-color: rgba(255, 205, 178, 0.1);
+}
+
+.drop-zone:hover {
+    background-color: rgba(255, 205, 178, 0.2);
+}
+
+.movie-group:not(.active) {
+    display: none;
+}
+
+/* On very large screens, increase the max-width */
 @media (min-width: 1200px) {
     .container {
         max-width: 800px;
