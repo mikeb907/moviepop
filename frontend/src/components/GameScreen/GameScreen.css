@@ -6,7 +6,6 @@
     align-items: center;
     justify-content: space-between; /* Ensures that the content is spaced out */
     height: 100vh; /* Take up full viewport height */
-    max-height: 852px;
     gap: 20px;
 }
 
