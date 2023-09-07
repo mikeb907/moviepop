@@ -18,7 +18,7 @@
     width: 100%;
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 8px;
     flex: 1; /* This allows the container to take up all the available space */
     padding-bottom: 24px;
 }
@@ -49,22 +49,99 @@
     height: 40px;
 }
 
+.title-bar h2 {
+    width: 100%;
+    text-align: center;
+}
+
 .circle-indicators {
     display: flex;
-    gap: 8px;
+    gap: 16px;
     flex-shrink: 0;
+    height: 32px;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Add this for the emoji size */
+.circle-indicators span {
+    font-size: 32px;
+    display: inline-block;
+    width: 32px; /* Same as the circle width */
+    height: 32px; /* Same as the circle height */
+    text-align: center;
+    line-height: 24px; /* Centering the emoji vertically */
+    transform: scale(0.5); /* start from a scaled-down state */
+    opacity: 0; /* start from invisible */
+}
+
+.circle-indicators span.emoji {
+    font-size: 32px;
+    display: inline-block;
+    width: 32px; /* Same as the circle width */
+    height: 32px; /* Same as the circle height */
+    text-align: center;
+    line-height: 24px; /* Centering the emoji vertically */
+    transform: scale(0.5); /* start from a scaled-down state */
+    opacity: 0; /* start from invisible */
+    transition: transform 140ms ease-in-out, opacity 140ms ease-in-out; /* smooth transition */
+}
+
+
+.circle-indicators div {
+    position: relative;
+    width: 24px;
+    height: 24px;
+    transition: width 140ms ease-in-out, height 140ms ease-in-out; /* Existing transitions */
+    transform-origin: center center; /* Make sure transformations are centered */
+}
+
+
+.circle-indicators .answered-container {
+    width: 32px;
+    height: 32px;
+}
+
+/* .circle-indicators div.emoji {
+    position: relative;
+    width: 32px;
+    height: 32px;
+} */
+
+.circle, .circle-indicators span {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+@keyframes bouncyEffect {
+    0% { transform: scale(0); }
+    70% { transform: scale(1.4); }   /* Scale up more than 100% for the bounce */
+    100% { transform: scale(1); }    /* Return to normal size */
+}
+
+.circle-indicators span.emoji-pop {
+    transform: scale(1);
+    opacity: 1;
+    animation: bouncyEffect 140ms;  /* Apply the bouncy effect */
 }
 
 .circle {
-    width: 16px;
-    height: 16px;
+    width: 24px;
+    height: 24px;
     border-radius: 50%;
     background-color: #EBEBEB;
     cursor: pointer;
 }
 
 .circle.answered {
-    background-color: #424242;
+    background-color: #6349FF;
+    transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out; /* smooth transition */
+}
+
+.circle.submitted {
+    opacity: 0; 
 }
 
 .title-choices {
@@ -101,6 +178,16 @@
 .title-choice-button:hover {
     background-color: #d0d0d0;
     color: #5D5A51;
+}
+
+.title-choice-button.correct {
+    background-color: #4CAF50; /* green */
+    color: #fff;
+}
+
+.title-choice-button.incorrect {
+    background-color: #F44336; /* red */
+    color: #fff;
 }
 
 .action-bar {
@@ -144,8 +231,8 @@
 
 /* For the active state of the submit button */
 .submit-btn.active {
-    background-color: #6349FF;
-    color: #FFFFFF;
+    background-color: #E0DBFF;
+    color: #6349FF;
 }
 
 .prev-arrow:hover, .next-arrow:hover {
@@ -157,8 +244,20 @@
 }
 
 .submit-btn.active:hover {
-    background-color: #5740E0; /* Darker shade of blue for active button hover state */
+    background-color: #D0C8FF; /* Darker shade of blue for active button hover state */
 }
+
+/* Styling for the Share button */
+.share-btn {
+    background-color: #6349FF;
+    color: #FFFFFF;
+}
+
+
+
+
+
+
 
 @media screen and (min-width: 1024px) {
     .game-screen {

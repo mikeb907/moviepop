@@ -19,5 +19,6 @@
 .close-btn {
     cursor: pointer;  /* To indicate it's clickable */
     color: #383838;
+    height: 24px;
     /* Additional styles for the close button can be added here if needed */
 }
