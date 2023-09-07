@@ -4,7 +4,7 @@
     align-items: center;
     display: flex;
     flex-direction: column;
-    height: 100vh;
+    height: calc(100 * var(--vh));
     justify-content: space-between;
     width: 100%;
 }
