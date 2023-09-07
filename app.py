@@ -14,7 +14,8 @@ class Movie(db.Model):
 
 @app.route('/')
 def index():
-    return app.send_static_file('index.html')
+    return send_from_directory('frontend/build', 'index.html')
+
 
 
 @app.route('/get-movies')
