@@ -1,21 +1,23 @@
 /* components/HomeMenu/HomeMenu.css */
 
 .home-menu {
+    align-items: center;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center; /* Centers child elements vertically */
-    height: 100%; /* Takes the full height of the viewport */
-    gap: 20px;
+    height: 100%;
+    justify-content: space-between;
+    width: 100%;
 }
 
 
 .menu-title {
+    max-width: 100%;
+    height: auto;
+    flex: 1;
     display: flex;
-    flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: 100%; /* This ensures that the .menu-title takes the full height of its parent */
+    flex-direction: column;
 }
 
 
@@ -30,8 +32,9 @@
 .menu-buttons {
     display: flex;
     flex-direction: column;
-    align-items: stretch;  /* Makes the buttons stretch to full width */
-    width: 100%;  /* Assumes you want the buttons to take full width of the .home-menu container */
+    align-items: stretch;
+    width: 100%;
+    padding-bottom: 16px;
 }
 
 .menu-buttons button {
@@ -61,4 +64,26 @@
 
 .menu-buttons button:first-child:hover {
     background-color: #5740E0;  /* Darker color for the "Start" button on hover */
+}
+
+
+@media screen and (min-width: 1024px) {
+
+
+    .home-menu {
+        width: 100%; /* Ensure it takes up the full width */
+        justify-content: center; /* This will center the children vertically */
+    }
+
+    .menu-buttons {
+        display: flex;
+        flex-direction: column;
+        align-items: center;  /* Horizontally center the buttons */
+    }
+
+    .menu-buttons button {
+        width: 400px;
+        margin-left: auto;
+        margin-right: auto;
+    }
 }

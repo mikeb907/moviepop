@@ -112,6 +112,7 @@
     height: 56px;
     padding: 0 16px; /* Padding on the sides to give a little space. Adjust as needed. */
     gap: 8px;
+    padding-bottom: 16px;
 }
 
 .prev-arrow, .next-arrow {
@@ -158,4 +159,31 @@
 
 .submit-btn.active:hover {
     background-color: #5740E0; /* Darker shade of blue for active button hover state */
+}
+
+@media screen and (min-width: 1024px) {
+    .game-screen {
+        width: 100%; /* Ensure it takes up the full width */
+        height: 100%;
+        align-items: center; /* Horizontally center the children */
+    }
+
+    .question-content-container,
+    .movie-still-container,
+    .title-bar,
+    .title-choices,
+    .action-bar {
+        max-width: 400px;
+        
+    }
+
+    .title-choice-button {
+        width: 100%;
+    }
+
+    .prev-arrow, 
+    .next-arrow,
+    .submit-btn {
+        width: calc(33.33% - 8px); /* Adjusting the width considering the gap */
+    }
 }
