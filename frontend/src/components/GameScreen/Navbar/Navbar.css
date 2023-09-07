@@ -2,10 +2,22 @@
 
 .navbar {
     display: flex;
+    flex-direction: row;  /* Explicitly set to row */
     justify-content: space-between;
+    align-items: center; 
     width: 100%;
+    height: 40px;
+    padding: 0 8px; 
+}
+
+.right-icons {
+    display: flex;
+    gap: 8px; 
+    color: #383838;
 }
 
 .close-btn {
-    /* Add styles for the close button here */
+    cursor: pointer;  /* To indicate it's clickable */
+    color: #383838;
+    /* Additional styles for the close button can be added here if needed */
 }
