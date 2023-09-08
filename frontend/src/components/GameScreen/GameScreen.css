@@ -1,31 +1,36 @@
-/* components/GameScreen/GameScreen.css */
+/* 
+components/GameScreen/GameScreen.css 
+*/
+
+/* ========== GLOBAL STYLES ========== */
 
 .game-screen {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: space-between; /* Ensures that the content is spaced out */
+    justify-content: space-between;
     height: calc(100 * var(--vh));
     gap: 20px;
 }
 
 .question-content-container {
     width: 100%;
-
 }
+
+/* ========== MOVIE STILL ========== */
 
 .movie-still-container {
     width: 100%;
     display: flex;
     flex-direction: column;
     gap: 8px;
-    flex: 1; /* This allows the container to take up all the available space */
+    flex: 1;
     padding-bottom: 24px;
 }
 
 .movie-still {
     width: 100%;
-    padding-top: 56.25%; /* 16:9 aspect ratio */
+    padding-top: 56.25%;
     position: relative;
     overflow: hidden;
 }
@@ -40,109 +45,95 @@
     border-radius: 4px;
 }
 
-.title-bar {
+/* ========== CIRCLE INDICATORS ========== */
+
+.circle-indicators-container {
     display: flex;
-    flex-direction: row;
-    justify-content: space-between;
     align-items: center;
+    justify-content: center;
     width: 100%;
-    height: 40px;
 }
 
-.title-bar h2 {
-    width: 100%;
-    text-align: center;
+.prev-arrow, .next-arrow {
+    flex-shrink: 0; /* Prevent arrows from shrinking */
+    height: 56px;
+    /* width: 33.33%; */
+    background: none;
+    border: none;
+    border-radius: 4px;
+    color: #BCBCBC;
+    font-size: 24px;
+    cursor: pointer;
+    transition: 0.3s;
+    align-items: center;
+    display: flex;
+    justify-content: center;
 }
+
+/* .prev-arrow:hover, .next-arrow:hover {
+    background-color: #F7F7F7;
+} */
 
 .circle-indicators {
     display: flex;
     gap: 16px;
-    flex-shrink: 0;
-    height: 32px;
-    width: 100%;
+    flex-grow: 1; /* Allow circle indicators to take up remaining space */
     justify-content: center;
     align-items: center;
-}
-
-/* Add this for the emoji size */
-.circle-indicators span {
-    font-size: 32px;
-    display: inline-block;
-    width: 32px; /* Same as the circle width */
-    height: 32px; /* Same as the circle height */
-    text-align: center;
-    line-height: 24px; /* Centering the emoji vertically */
-    transform: scale(0.5); /* start from a scaled-down state */
-    opacity: 0; /* start from invisible */
-}
-
-.circle-indicators span.emoji {
-    font-size: 32px;
-    display: inline-block;
-    width: 32px; /* Same as the circle width */
-    height: 32px; /* Same as the circle height */
-    text-align: center;
-    line-height: 24px; /* Centering the emoji vertically */
-    transform: scale(0.5); /* start from a scaled-down state */
-    opacity: 0; /* start from invisible */
-    transition: transform 140ms ease-in-out, opacity 140ms ease-in-out; /* smooth transition */
+    padding: 0 16px; /* Provide some space between the arrows and the circles */
 }
 
 
 .circle-indicators div {
-    position: relative;
-    width: 24px;
-    height: 24px;
-    transition: width 140ms ease-in-out, height 140ms ease-in-out; /* Existing transitions */
-    transform-origin: center center; /* Make sure transformations are centered */
-}
-
-
-.circle-indicators .answered-container {
     width: 32px;
     height: 32px;
+    transition: width 140ms ease-in-out, height 140ms ease-in-out;
+    transform-origin: center center;
+  
 }
 
-/* .circle-indicators div.emoji {
-    position: relative;
-    width: 32px;
-    height: 32px;
-} */
-
-.circle, .circle-indicators span {
-    position: absolute;
-    top: 0;
-    left: 0;
-}
-
-@keyframes bouncyEffect {
-    0% { transform: scale(0); }
-    70% { transform: scale(1.4); }   /* Scale up more than 100% for the bounce */
-    100% { transform: scale(1); }    /* Return to normal size */
-}
-
-.circle-indicators span.emoji-pop {
-    transform: scale(1);
-    opacity: 1;
-    animation: bouncyEffect 140ms;  /* Apply the bouncy effect */
+.circle-indicators div.answered-container {
+    display: flex;
+    justify-content: center;
 }
 
 .circle {
-    width: 24px;
-    height: 24px;
+    /* position: absolute; */
+    top: 0;
+    left: 0;
+    width: 32px;
+    height: 32px;
     border-radius: 50%;
     background-color: #EBEBEB;
     cursor: pointer;
+    transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
 }
 
 .circle.answered {
-    background-color: #6349FF;
-    transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out; /* smooth transition */
+    background-color: #737373;
 }
 
 .circle.submitted {
-    opacity: 0; 
+    display: none;
 }
+
+.circle.current {
+    box-shadow: inset 0 0 0 4px rgba(0, 0, 0, 0.20);
+}
+
+@keyframes bouncyEffect {
+    0% { transform: scale(1); }
+    70% { transform: scale(2.2); }
+    100% { transform: scale(2); }
+}
+
+.circle-indicators span.emoji-pop {
+    transform: scale(2);
+    opacity: 1;
+    animation: bouncyEffect 140ms;
+}
+
+/* ========== TITLE CHOICES ========== */
 
 .title-choices {
     display: flex;
@@ -165,30 +156,27 @@
     transition: background-color 0.3s;
 }
 
-.title-choice-button:hover, .title-choice-button.selected:hover {
+/* .title-choice-button:hover, .title-choice-button.selected:hover {
     background-color: #5a5851;
     color: #fff;
-}
+} */
 
 .title-choice-button.selected {
     background-color: #424242;
     color: #fff;
 }
 
-.title-choice-button:hover {
-    background-color: #d0d0d0;
-    color: #5D5A51;
-}
-
 .title-choice-button.correct {
-    background-color: #4CAF50; /* green */
+    background-color: #4CAF50;
     color: #fff;
 }
 
 .title-choice-button.incorrect {
-    background-color: #F44336; /* red */
+    background-color: #F44336;
     color: #fff;
 }
+
+/* ========== ACTION BAR ========== */
 
 .action-bar {
     display: flex;
@@ -196,19 +184,19 @@
     justify-content: space-between;
     width: 100%;
     height: 56px;
-    padding: 0 16px; /* Padding on the sides to give a little space. Adjust as needed. */
+    padding: 0 16px;
     gap: 8px;
     padding-bottom: 16px;
 }
 
-.prev-arrow, .next-arrow {
+/* .prev-arrow, .next-arrow {
     height: 56px;
-    width: 33.33%; /* Dividing equally between the three buttons */
+    width: 33.33%;
     background: none;
     border: none;
     border-radius: 4px;
     color: #979797;
-    font-size: 24px; /* Size of the arrows */
+    font-size: 24px;
     cursor: pointer;
     transition: 0.3s;
     align-items: center;
@@ -216,11 +204,15 @@
     justify-content: center;
 }
 
+.prev-arrow:hover, .next-arrow:hover {
+    background-color: #F7F7F7;
+} */
+
 .submit-btn {
     height: 56px;
-    width: 33.33%; /* Dividing equally between the three buttons */
-    background-color: #F7F7F7; /* Default inactive state */
-    color: #BFBFBF; /* Default inactive state text color */
+    width: 100%;
+    background-color: #F7F7F7;
+    color: #BFBFBF;
     border: none;
     border-radius: 4px;
     font-size: 16px;
@@ -229,59 +221,35 @@
     transition: background-color 0.3s;
 }
 
-/* For the active state of the submit button */
 .submit-btn.active {
     background-color: #E0DBFF;
     color: #6349FF;
 }
 
-.prev-arrow:hover, .next-arrow:hover {
-    background-color: #F7F7F7;
-}
-
-.submit-btn:hover:not(.active) {
-   cursor: not-allowed;
-}
-
 .submit-btn.active:hover {
-    background-color: #D0C8FF; /* Darker shade of blue for active button hover state */
+    background-color: #D0C8FF;
 }
 
-/* Styling for the Share button */
 .share-btn {
+    color: white;
     background-color: #6349FF;
-    color: #FFFFFF;
 }
 
-
-
-
-
-
+/* ========== MEDIA QUERIES ========== */
 
 @media screen and (min-width: 1024px) {
     .game-screen {
-        width: 100%; /* Ensure it takes up the full width */
+        width: 100%;
         height: 100%;
-        align-items: center; /* Horizontally center the children */
+        align-items: center;
     }
 
     .question-content-container,
     .movie-still-container,
-    .title-bar,
     .title-choices,
     .action-bar {
         max-width: 400px;
-        
     }
 
-    .title-choice-button {
-        width: 100%;
-    }
-
-    .prev-arrow, 
-    .next-arrow,
-    .submit-btn {
-        width: calc(33.33% - 8px); /* Adjusting the width considering the gap */
-    }
+   
 }

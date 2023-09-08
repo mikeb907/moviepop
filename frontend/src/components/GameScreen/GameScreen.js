@@ -101,9 +101,36 @@ function GameScreen() {
 
             <div className="question-content-container">
                 <div className="movie-still-container">
-                    <div className="title-bar">
-                        <h2>Movie {currentStillIndex + 1}/3</h2>
+                <div className="circle-indicators-container">
+                    <button className="prev-arrow" onClick={() => setCurrentStillIndex(prev => Math.max(prev - 1, 0))}>
+                        <ArrowBackIosIcon />
+                    </button>
+                    
+                    <div className="circle-indicators">
+                        {stillsData.map((still, index) => {
+                            const isAnswered = selectedTitles[index];
+                            const isCorrect = selectedTitles[index] === still.correctTitle;
+                            return (
+                                <div key={index} className={hasSubmitted ? 'answered-container' : ''} onClick={() => setCurrentStillIndex(index)}>
+                                    <div 
+                                        className={`circle ${isAnswered ? 'answered' : ''} ${hasSubmitted ? 'submitted' : ''} ${index === currentStillIndex ? 'current' : ''}`}
+                                    />
+
+                                    {hasSubmitted && (
+                                        <span className={`emoji ${emojiPop ? 'emoji-pop' : ''}`}>
+                                            {isCorrect ? '🍿' : '🍅'}
+                                        </span>
+                                    )}
+                                </div>
+                            );
+                        })}
                     </div>
+
+                    <button className="next-arrow" onClick={() => setCurrentStillIndex(prev => Math.min(prev + 1, stillsData.length - 1))}>
+                        <ArrowForwardIosIcon />
+                    </button>
+                </div>
+
 
                     <div className="movie-still">
                         <img src={stillsData[currentStillIndex].image} alt={`Movie Still ${currentStillIndex + 1}`} />
@@ -124,30 +151,10 @@ function GameScreen() {
                 </div>
             </div>
 
-            <div className="circle-indicators">
-                {stillsData.map((still, index) => {
-                    const isAnswered = selectedTitles[index];
-                    const isCorrect = selectedTitles[index] === still.correctTitle;
-                    return (
-                        <div key={index} className={hasSubmitted ? 'answered-container' : ''} onClick={() => setCurrentStillIndex(index)}>
-                            <div 
-                                className={`circle ${isAnswered ? 'answered' : ''} ${hasSubmitted ? 'submitted' : ''}`}
-                            />
-                            {hasSubmitted && (
-                                <span className={`emoji ${emojiPop ? 'emoji-pop' : ''}`}>
-                                    {isCorrect ? '🍿' : '🍅'}
-                                </span>
-                            )}
-                        </div>
-                    );
-                })}
-            </div>
+           
 
             <div className="action-bar">
-                <button className="prev-arrow" onClick={() => setCurrentStillIndex(prev => Math.max(prev - 1, 0))}>
-                    <ArrowBackIosIcon />
-                </button>
-
+            
                 {!hasSubmitted ? (
                     <button 
                         className={`submit-btn ${selectedTitles.length === 3 && !selectedTitles.includes(null) ? 'active' : ''}`} 
@@ -162,9 +169,7 @@ function GameScreen() {
                     </button>
                 )}
 
-                <button className="next-arrow" onClick={() => setCurrentStillIndex(prev => Math.min(prev + 1, stillsData.length - 1))}>
-                    <ArrowForwardIosIcon />
-                </button>
+        
             </div>
         </div>
     );
