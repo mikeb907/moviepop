@@ -2,9 +2,12 @@ from flask import Flask, send_from_directory
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 import random
+import os
 
 app = Flask(__name__, static_folder="frontend/build/static", template_folder="frontend/build")
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///movies.db'
+
+# PostgreSQL connection configuration
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'postgresql://postgres:Sfogliatelle1209!@localhost/postgres')
 
 # Initialize CORS with the app
 CORS(app)
@@ -25,7 +28,7 @@ def get_movies():
     movies = Movie.query.all()
     if not movies:
         return {"error": "No movies found in the database!"}, 404
-    
+ 
     movies_data = [{"title": movie.title, "still_url": movie.still_url} for movie in movies]
     return {"movies": random.sample(movies_data, 3)}  # Randomly selecting 3 movies
 
