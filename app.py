@@ -10,8 +10,16 @@ import boto3
 app = Flask(__name__, static_folder="frontend/build/static", template_folder="frontend/build")
 
 # PostgreSQL connection configuration
+# DATABASE_URL = os.environ.get('DATABASE_URL', 'postgresql://postgres:Sfogliatelle1209!@localhost/postgres')
+# app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URL
+
 DATABASE_URL = os.environ.get('DATABASE_URL', 'postgresql://postgres:Sfogliatelle1209!@localhost/postgres')
+
+if DATABASE_URL.startswith("postgres://"):
+    DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
+
 app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URL
+
 
 # Initialize CORS to allow all origins
 CORS(app, resources={r"/*": {"origins": "*"}})
