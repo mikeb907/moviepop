@@ -10,7 +10,8 @@ import boto3
 app = Flask(__name__, static_folder="frontend/build/static", template_folder="frontend/build")
 
 # PostgreSQL connection configuration
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'postgresql://postgres:Sfogliatelle1209!@localhost/postgres')
+DATABASE_URL = os.environ.get('DATABASE_URL', 'postgresql://postgres:Sfogliatelle1209!@localhost/postgres')
+app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URL
 
 # Initialize CORS to allow all origins
 CORS(app, resources={r"/*": {"origins": "*"}})
@@ -25,19 +26,6 @@ class Movie(db.Model):
     still_url = db.Column(db.String(500), nullable=False)
     last_shown = db.Column(db.DateTime, default=None)  # Track when the movie was last shown
 
-def generate_presigned_url(bucket_name, object_name, expiration=3600):
-    s3_client = boto3.client('s3')
-    try:
-        response = s3_client.generate_presigned_url('get_object',
-                                                    Params={'Bucket': bucket_name,
-                                                            'Key': object_name},
-                                                    ExpiresIn=expiration)
-    except Exception as e:
-        logging.error(e)
-        return None
-
-    return response
-
 def get_daily_movies():
     # Fetch all movies that haven't been shown in the past week or never shown
     week_ago = datetime.utcnow() - timedelta(days=7)
@@ -50,7 +38,7 @@ def get_daily_movies():
         return None
 
     selected_movies = random.sample(movies, 3)
-    movies_data = []  # <-- Initialize movies_data
+    movies_data = []
 
     for selected_movie in selected_movies:
         random_titles = random.sample([title for title in all_titles if title != selected_movie.title], 2)
@@ -68,31 +56,33 @@ def get_daily_movies():
     
     return movies_data
 
-# @app.route('/test')
-# def test():
-#     return "Flask is running!"
-
-
 @app.route('/')
 def index():
     return send_from_directory('frontend/build', 'index.html')
 
 @app.route('/get-movies')
 def get_movies():
-    logging.info('Fetching movies...')
-    movies_data = get_daily_movies()
-    if not movies_data:
-        logging.error('Not enough movies to play the game!')
-        return {"error": "Not enough movies to play the game!"}, 404
-    return jsonify({ 'movies': movies_data })
+    try:
+        logging.info('Fetching movies...')
+        movies_data = get_daily_movies()
+        if not movies_data:
+            logging.error('Not enough movies to play the game!')
+            return {"error": "Not enough movies to play the game!"}, 404
+        return jsonify({'movies': movies_data})
+    except Exception as e:
+        logging.error(f"Error while fetching movies: {e}")
+        return {"error": "Internal Server Error"}, 500
 
 @app.route('/game/setup/manual', methods=['POST'])
 def manual_game_setup():
     get_daily_movies()
     return jsonify({"message": "Game setup completed!"})
 
-with app.app_context():
-    db.create_all()  
+@app.route('/initdb')
+def initdb():
+    """Create tables if they don't exist."""
+    db.create_all()
+    return 'Database tables created!', 200
 
 if __name__ == '__main__':
     app.run(host='127.0.0.1', port=5000, debug=True, threaded=True)
