@@ -5,21 +5,16 @@ import random
 import os
 from datetime import datetime, timedelta
 import logging
-import boto3
 
 app = Flask(__name__, static_folder="frontend/build/static", template_folder="frontend/build")
 
 # PostgreSQL connection configuration
-# DATABASE_URL = os.environ.get('DATABASE_URL', 'postgresql://postgres:Sfogliatelle1209!@localhost/postgres')
-# app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URL
-
 DATABASE_URL = os.environ.get('DATABASE_URL', 'postgresql://postgres:Sfogliatelle1209!@localhost/postgres')
 
 if DATABASE_URL.startswith("postgres://"):
     DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
 
 app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URL
-
 
 # Initialize CORS to allow all origins
 CORS(app, resources={r"/*": {"origins": "*"}})
@@ -35,14 +30,12 @@ class Movie(db.Model):
     last_shown = db.Column(db.DateTime, default=None)  # Track when the movie was last shown
 
 def get_daily_movies():
-    # Fetch all movies that haven't been shown in the past week or never shown
     week_ago = datetime.utcnow() - timedelta(days=7)
     movies = Movie.query.filter((Movie.last_shown < week_ago) | (Movie.last_shown == None)).all()
 
     all_titles = [movie.title for movie in Movie.query.all()]  # Fetch all movie titles
 
     if len(movies) < 3:
-        # Not enough movies in the pool, consider resetting some dates or adding more movies
         return None
 
     selected_movies = random.sample(movies, 3)
@@ -53,7 +46,6 @@ def get_daily_movies():
         random_titles.append(selected_movie.title)
         random.shuffle(random_titles)
 
-        # Adjust the URL to include the correct path segment
         correct_url = "https://concessionstand.nyc3.digitaloceanspaces.com/concessionstand/" + selected_movie.still_url.split('/')[-1]
 
         movies_data.append({
@@ -61,7 +53,7 @@ def get_daily_movies():
             "still_url": correct_url,
             "options": random_titles
         })
-    
+
     return movies_data
 
 @app.route('/')
