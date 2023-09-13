@@ -3,25 +3,26 @@
 import React from 'react';
 import './Navbar.css';
 import { useNavigate } from 'react-router-dom';  
-// import CloseIcon from '@material-ui/icons/Close';
 import HelpIcon from '@material-ui/icons/Help';
 import BarChartIcon from '@material-ui/icons/BarChart';
 import SettingsIcon from '@material-ui/icons/Settings';
-import logo from '../../../assets/moviepop-logo.png';  // Assuming you placed the image in an 'assets' folder
+import logo from '../../../assets/moviepop-logo.png';
 
-
-function Navbar() {
-    const navigate = useNavigate();  // Instantiate the navigate hook
+function Navbar({ devMode, resetGame }) {
+    const navigate = useNavigate();
 
     const navigateToHome = () => {
-        navigate('/');  // Navigate to home route using the updated navigate function
+        navigate('/');
     };
 
     return (
         <div className="navbar">
-            {/* <CloseIcon className="close-btn" onClick={navigateToHome} />   */}
             <img className="close-btn" onClick={navigateToHome} src={logo} alt="MoviePop Logo" />
             <div className="right-icons">
+            {devMode && (
+                <button style={{ backgroundColor: "#FFAB49", color: "#FFf", border: "none", fontWeight: "bold" }} onClick={resetGame}>R</button>
+            )}
+
                 <HelpIcon />
                 <BarChartIcon />
                 <SettingsIcon />
@@ -29,4 +30,5 @@ function Navbar() {
         </div>
     );
 }
+
 export default Navbar;

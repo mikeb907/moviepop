@@ -27,11 +27,38 @@ class Movie(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(200), nullable=False)
     still_url = db.Column(db.String(500), nullable=False)
-    last_shown = db.Column(db.DateTime, default=None)  # Track when the movie was last shown
+    last_shown = db.Column(db.DateTime, default=None)
+    is_active = db.Column(db.Boolean, default=False)
+    options = db.relationship('MovieOption', backref='movie', lazy=True)
+
+
+class MovieOption(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    movie_id = db.Column(db.Integer, db.ForeignKey('movie.id'), nullable=False)
+    option_title = db.Column(db.String(200), nullable=False)
+
+class GameHistory(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    movie_id = db.Column(db.Integer, db.ForeignKey('movie.id'), nullable=False)
+    date_shown = db.Column(db.DateTime, nullable=False)
+
+
+# Global variables for caching
+daily_movies_cache = None
+last_updated_date = None
 
 def get_daily_movies():
+    global daily_movies_cache, last_updated_date
+    
+    # Check if we already have movies for today
+    today = datetime.utcnow().date()
+    if daily_movies_cache and last_updated_date == today:
+        return daily_movies_cache
+
     week_ago = datetime.utcnow() - timedelta(days=7)
-    movies = Movie.query.filter((Movie.last_shown < week_ago) | (Movie.last_shown == None)).all()
+    
+    # Filter movies that were not shown in the past week and are not active.
+    movies = Movie.query.filter((Movie.last_shown < week_ago) | (Movie.last_shown == None), Movie.is_active == False).all()
 
     all_titles = [movie.title for movie in Movie.query.all()]  # Fetch all movie titles
 
@@ -54,7 +81,20 @@ def get_daily_movies():
             "options": random_titles
         })
 
+    # Update the movies' last_shown date and set them as active.
+    for movie in selected_movies:
+        movie.last_shown = datetime.utcnow()
+        movie.is_active = True
+
+    db.session.commit()
+
+    # Update the cache and the date
+    daily_movies_cache = movies_data
+    last_updated_date = today
+
     return movies_data
+
+
 
 @app.route('/')
 def index():
