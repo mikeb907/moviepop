@@ -1,0 +1,217 @@
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(4px);
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    z-index: 1000;
+    width: 100%;
+}
+
+.modal-content {
+    width: 100vw;
+    /* max-width: 500px; */
+    max-height: 70vh;
+    background-color: #0D0D0D;
+    padding: 16px;
+    padding-bottom: 24px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transform: translateY(100%);  /* It starts off the screen */
+    opacity: 0;
+    transition: transform 240ms ease-in-out, opacity 240ms ease-in-out; /* Adjusted animation duration and type */
+}
+
+.modal-content.active {
+    transform: translateY(0); /* When active, it slides up to its place */
+    opacity: 1;
+    background-color: #0D0D0D;
+    color: white;
+    font-family: 'Inconsolata', monospace;
+    width: 100%;
+
+}
+
+.close-bar {
+    width: 100%;
+    text-align: right;
+}
+
+.divider {
+    border-bottom: solid 1px rgba(255, 255, 255, 0.16);
+    padding-top: 16px;
+}
+
+.how-to-play h2 {
+    padding-top: 16px;
+}
+
+.disclaimer {
+    padding-top: 16px;
+}
+
+.disclaimer p {
+    color: #fff;
+    opacity: 1;
+    font-weight: 600;
+}
+
+
+
+.menu-buttons-settings {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+    padding-bottom: 16px;
+    padding-top: 16px;
+}
+
+.menu-buttons-settings button {
+    height: 56px;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    background-color: none;  /* Default button color */
+    color: #fff;
+    border: solid 1px #fff;
+    font-family: 'Inconsolata', monospace;
+    font-size: 16px;
+    font-weight:800;
+    margin: 4px 0;  /* Updated margin */
+    padding: 0;  /* Removed padding since we're now controlling height directly */
+    transition: background-color 0.3s;  /* Smoothens the hover effect */
+}
+
+.menu-buttons-settings button:hover {
+   opacity: 0.9;
+}
+
+.menu-buttons-settings button:first-child:hover {
+    opacity: 0.9;
+}
+
+
+
+
+/* STATISTICS */
+
+.stat-summary {
+    display: flex;
+    /* width: 100%; */
+    flex: 1 1;
+    justify-content: space-between;
+    flex-direction: row;
+    padding-top: 24px;
+    border: solid 1px #fff;
+    padding: 16px 16px 16px 16px;
+    margin-top: 24px;
+}
+
+.stat-summary h3 {
+    font-size: 20px;
+    font-weight: 800;
+    color: #fff;
+    margin: 0 auto;
+}
+
+.stat-summary p {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.64);
+    margin: 0 auto;
+}
+
+.games-played {
+    display: flex;
+    flex-direction: column;
+}
+
+.win-perc {
+    display: flex;
+    flex-direction: column;
+}
+
+.win-streak {
+    display: flex;
+    flex-direction: column;
+}
+
+.max-streak {
+    display: flex;
+    flex-direction: column;
+}
+
+
+.guess-dist {
+    padding-top: 24px;
+}
+
+.guess-chart {
+    width: 100%;
+}
+
+.bar-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.guess-label {
+    /* width: 80px;  */
+    margin-right: 8px;
+    text-align: left;
+    width: 76px;
+}
+
+.bar {
+    /* flex-grow: 1; */
+    height: 32px;  /* Adjust the height based on your needs */
+    width: 32px;
+    background-color: rgba(255, 255, 255, 0.08);
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+
+.bar-frequency-inside {
+    width: 100%;
+    text-align: center;
+    margin: 0 auto;
+   
+}
+
+.bar-frequency-inside p {
+    padding-right: 8px;
+}
+
+
+@media screen and (min-width: 1024px) {
+    .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100vh;
+        width: 100vw;
+        background-color: rgba(0, 0, 0, 0.7);
+        backdrop-filter: blur(5px);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+    }
+    
+    .modal-content {
+        width: 100vw;
+        max-width: 500px;
+        max-height: 70vh;
+        background-color: #0D0D0D;
+        padding: 16px;
+        padding-bottom: 24px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+   
+}

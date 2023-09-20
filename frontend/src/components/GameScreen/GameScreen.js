@@ -1,8 +1,54 @@
 import React, { useState, useEffect } from 'react';
 import './GameScreen.css';
 import Navbar from './Navbar/Navbar';
-import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
-import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
+import Modal from '../Modal/Modal';
+
+import { ArrowLeft, ArrowRight } from 'react-feather'; // Import Feather arrow icons
+
+
+const fetchStatisticsFromLocalStorage = () => {
+    const oneDay = 24 * 60 * 60 * 1000; // milliseconds in one day
+    const now = new Date();
+    const data = [];
+
+    // Loop through the last 365 days (1 year)
+    for (let i = 0; i < 365; i++) {
+        const date = new Date(now - i * oneDay);
+        const key = `moviepop_data_${date.toLocaleDateString()}`;
+        const value = localStorage.getItem(key);
+        if (value) {
+            data.push(JSON.parse(value));
+        }
+    }
+    return data;
+};
+
+
+const calculateStatistics = (data) => {
+    const totalGames = data.length;
+    if (totalGames === 0) {
+        return {
+            popcornPercentage: 0,
+            mixedPercentage: 0,
+            badPercentage: 0,
+            terriblePercentage: 0
+        };
+    }
+
+    const popcornGames = data.filter(game => game.animatedIndices && game.animatedIndices.length === 3).length;
+    const mixedGames = data.filter(game => game.animatedIndices && game.animatedIndices.length === 2).length;
+    const badGames = data.filter(game => game.animatedIndices && game.animatedIndices.length === 1).length;
+    const terribleGames = data.filter(game => !game.animatedIndices || game.animatedIndices.length === 0).length;
+
+    return {
+        popcornPercentage: (popcornGames / totalGames) * 100,
+        mixedPercentage: (mixedGames / totalGames) * 100,
+        badPercentage: (badGames / totalGames) * 100,
+        terriblePercentage: (terribleGames / totalGames) * 100
+    };
+};
+
+
 
 
 function GameScreen() {
@@ -13,8 +59,12 @@ function GameScreen() {
     const gameNumber = 1;  
     const [devMode, setDevMode] = useState(false); 
     const [animationKey, setAnimationKey] = useState(0);
-    const [emojiTransitionIndex, setEmojiTransitionIndex] = useState(-1);
+    // const [emojiTransitionIndex, setEmojiTransitionIndex] = useState(-1);
     const [animatedIndices, setAnimatedIndices] = useState([]);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [modalOpen, setModalOpen] = useState(false);
+    const [modalType, setModalType] = useState(null);
+    const [latestStatistics, setLatestStatistics] = useState(null);
 
 
 
@@ -22,13 +72,15 @@ function GameScreen() {
         const currentDateKey = `moviepop_data_${new Date().toLocaleDateString()}`;
         const localData = JSON.parse(localStorage.getItem(currentDateKey));
 
+        console.log("Initializing from localStorage:", localData);
+    
         if (localData) {
             setStillsData(localData.movies);
             setSelectedTitles(localData.selectedTitles || new Array(localData.movies.length).fill(null));
             setHasSubmitted(localData.hasSubmitted || false);
-            setEmojiTransitionIndex(localData.emojiTransitionIndex || -1);
-            setAnimatedIndices(localData.animatedIndices || []);
-            
+            // setEmojiTransitionIndex(localData.emojiTransitionIndex || -1);
+            setAnimatedIndices(localData.animatedIndices || []);  // Ensure animatedIndices is set
+                
             if (localData.hasSubmitted) {
                 setAnimationKey(prevKey => prevKey + 1);
             }
@@ -39,54 +91,95 @@ function GameScreen() {
                     if (data && data.movies) {
                         setStillsData(data.movies);
                         setSelectedTitles(new Array(data.movies.length).fill(null));
-                        localStorage.setItem(currentDateKey, JSON.stringify({ movies: data.movies }));
                     }
                 })
                 .catch(error => console.error('Error fetching movies:', error));
         }
+        
     }, []);
+    
+
+    /* MAIN SCORE ANIMAITON USEEFFECT */
     
     useEffect(() => {
         if (hasSubmitted) {
             let index = 0;
             const interval = setInterval(() => {
-                setEmojiTransitionIndex(index);
+                console.log('Emoji update interval - Current index:', index);
+                // setEmojiTransitionIndex(index);
                 index++;
                 if (index >= stillsData.length) {
                     clearInterval(interval);
                 }
-            }, 500);
+            }, 200);
             return () => clearInterval(interval);
         }
     }, [hasSubmitted, stillsData.length]);
     
+    
 
     const handleSubmission = () => {
-        const intervals = [];
         setHasSubmitted(true);
     
         const newAnimatedIndices = [];
-        // Animate circles and emojis
-        stillsData.forEach((_, index) => {
-            intervals.push(setTimeout(() => {
-                newAnimatedIndices.push(index);
+        let index = 0;
+        
+        const interval = setInterval(() => {
+            if (index < stillsData.length) {
+                console.log('Checking answer for index:', index);
+                
+                if (selectedTitles[index] === stillsData[index].title) {
+                    console.log('Correct answer for index:', index);
+                } else {
+                    console.log('Wrong answer for index:', index);
+                }
+                newAnimatedIndices.push(index); 
                 setAnimatedIndices([...newAnimatedIndices]);
-            }, index * 500));
-        });
+                index++;
+            } else {
+                clearInterval(interval);
     
-        // After all animations are done, update local storage
-        intervals.push(setTimeout(() => {
-            const currentDateKey = `moviepop_data_${new Date().toLocaleDateString()}`;
-            const localData = JSON.parse(localStorage.getItem(currentDateKey));
-            localData.hasSubmitted = true;
-            localData.emojiTransitionIndex = -1;
-            localData.animatedIndices = newAnimatedIndices;  // Using the new array directly
+                // Determine the user's score based on correct answers
+                const numberCorrect = selectedTitles.filter((title, idx) => title === stillsData[idx].title).length;
     
-            localStorage.setItem(currentDateKey, JSON.stringify(localData));
-        }, stillsData.length * 500));
+                console.log("Number of Correct Answers:", numberCorrect);
+                console.log("Selected Titles:", selectedTitles);
+                console.log("Actual Movies:", stillsData.map(movie => movie.title));
     
-        return () => intervals.forEach(interval => clearInterval(interval));
+                // Based on the number of correct answers, categorize the user's score
+                const scoreKey = {
+                    3: '🍿🍿🍿',
+                    2: '🍿🍿🍅',
+                    1: '🍿🍅🍅',
+                    0: '🍅🍅🍅'
+                }[numberCorrect];
+    
+                // Now save to localStorage
+                const currentDateKey = `moviepop_data_${new Date().toLocaleDateString()}`;
+                const localData = JSON.parse(localStorage.getItem(currentDateKey) || '{}');
+                        
+                localData.hasSubmitted = true;
+                // localData.emojiTransitionIndex = -1;
+                localData.animatedIndices = newAnimatedIndices;
+                localData.movies = stillsData;
+                localData.selectedTitles = selectedTitles;
+    
+                localStorage.setItem(currentDateKey, JSON.stringify(localData));
+                console.log("Saving to local storage:", localData);
+    
+                // Update score in local storage
+                const currentScore = parseInt(localStorage.getItem(scoreKey) || '0');
+                localStorage.setItem(scoreKey, (currentScore + 1).toString());
+    
+                // After storing the game data in localStorage...
+                const data = fetchStatisticsFromLocalStorage();  
+                const stats = calculateStatistics(data);  
+                setLatestStatistics(stats);
+            }
+        }, 200);
     };
+    
+    
     
     
 
@@ -147,8 +240,10 @@ function GameScreen() {
         const currentDateKey = `moviepop_data_${new Date().toLocaleDateString()}`;
         const localData = JSON.parse(localStorage.getItem(currentDateKey));
         localData.selectedTitles = updatedSelections;
+        localData.animatedIndices = animatedIndices;  // Store animatedIndices here
         localStorage.setItem(currentDateKey, JSON.stringify(localData));
     };
+    
 
     
     
@@ -183,14 +278,24 @@ function GameScreen() {
     }, []);
 
     return (
+        
         <div className="game-screen" key={animationKey}>
-            <Navbar devMode={devMode} resetGame={resetGameForTesting} />
+            <Navbar 
+                devMode={devMode} 
+                resetGame={resetGameForTesting} 
+                setModalOpen={setModalOpen} 
+                setModalType={setModalType}
+            />
+
+            <Modal isOpen={modalOpen} onClose={() => setModalOpen(false)} type={modalType} statistics={latestStatistics} />
+
+
+
+
             <div className="question-content-container">
                 <div className="movie-still-container">
                     <div className="circle-indicators-container">
-                        <button className="prev-arrow" onClick={() => setCurrentStillIndex(prev => Math.max(prev - 1, 0))}>
-                            <ArrowBackIosIcon />
-                        </button>
+                     
                         <div className="circle-indicators">
                         {stillsData.map((still, index) => {
                             const isAnswered = selectedTitles[index];
@@ -200,9 +305,15 @@ function GameScreen() {
                                     <div 
                                         className={`circle ${isAnswered ? 'answered' : ''} ${animatedIndices.includes(index) ? 'animate-circle' : ''} ${index === currentStillIndex ? 'current' : ''}`}
                                     />
+
+
                                     {hasSubmitted && (
                                         <span className={`emoji ${animatedIndices.includes(index) ? 'animate-emoji' : ''}`}>
-                                            {isCorrect ? '🍿' : '🍅'}
+                                            {(() => {
+                                                const isCorrect = selectedTitles[index] === still.title;
+                                                console.log(`Rendering emoji for index ${index}. Correct?`, isCorrect);
+                                                return isCorrect ? '🍿' : '🍅';
+                                            })()}
                                         </span>
                                     )}
                                 </div>
@@ -211,9 +322,6 @@ function GameScreen() {
 
                         </div>
 
-                        <button className="next-arrow" onClick={() => setCurrentStillIndex(prev => Math.min(prev + 1, stillsData.length - 1))}>
-                            <ArrowForwardIosIcon />
-                        </button>
                     </div>
                     <div className="movie-still">
                         {stillsData[currentStillIndex] && <img src={stillsData[currentStillIndex].still_url} alt={`Movie Still ${currentStillIndex + 1}`} />}
@@ -233,6 +341,9 @@ function GameScreen() {
                 </div>
             </div>
             <div className="action-bar">
+                <button className="prev-arrow" onClick={() => setCurrentStillIndex(prev => Math.max(prev - 1, 0))}>
+                    <ArrowLeft />
+                </button>
                 {!hasSubmitted ? (
                     <button 
                         className={`submit-btn ${selectedTitles.length === 3 && !selectedTitles.includes(null) ? 'active' : ''}`} 
@@ -246,6 +357,9 @@ function GameScreen() {
                         Share
                     </button>
                 )}
+                <button className="next-arrow" onClick={() => setCurrentStillIndex(prev => Math.min(prev + 1, stillsData.length - 1))}>
+                    <ArrowRight />
+                </button>
             </div>
         </div>
     );

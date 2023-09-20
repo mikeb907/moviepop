@@ -18,7 +18,7 @@ function HomeMenu(props) {
             <div className="menu-title">
                 <p className="date">{currentDate.toLocaleDateString(undefined, { month: 'long', day: 'numeric', year: 'numeric' })}</p>  {/* Fixed class to className */}
                 <img src={logo} alt="MoviePop Logo" />   {/* Replaced h1 with img */}
-                <p>Do you know which movie is which?</p>
+                <p>the daily movie game</p>
             </div>
             <div className="menu-buttons">
                 <button onClick={handleStartClick}>Start</button>  {/* Updated onClick handler */}

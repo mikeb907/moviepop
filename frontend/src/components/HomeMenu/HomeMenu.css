@@ -25,8 +25,15 @@
     width: 216px;
 }
 
+.menu-title p {
+    font-size: 16px;
+}
+
 .date {
-    opacity: .4;
+    opacity: .5;
+    font-family: 'Inconsolata', monospace;
+    font-weight: 600;
+
 }
 
 .menu-buttons {
@@ -40,12 +47,12 @@
 .menu-buttons button {
     height: 56px;
     border: none;
-    border-radius: 4px;
     outline: none;
     cursor: pointer;
-    background-color: #EBEBEB;  /* Default button color */
-    color: #5D5A51;
-    font-family: 'Roboto', sans-serif;
+    background-color: #000;  /* Default button color */
+    color: #fff;
+    border: solid 1px #fff;
+    font-family: 'Inconsolata', monospace;
     font-size: 16px;
     font-weight:800;
     margin: 4px 0;  /* Updated margin */
@@ -54,16 +61,16 @@
 }
 
 .menu-buttons button:hover {
-    background-color: #d0d0d0;  /* Slightly darker on hover */
+   opacity: 0.9;
 }
 
 .menu-buttons button:first-child {
-    background-color: #6349FF;  /* Color for the "Start" button */
-    color: #fff;  /* Text color for the "Start" button */
+    background-color: #fff;  /* Color for the "Start" button */
+    color: #000;  /* Text color for the "Start" button */
 }
 
 .menu-buttons button:first-child:hover {
-    background-color: #5740E0;  /* Darker color for the "Start" button on hover */
+    opacity: 0.9;
 }
 
 
