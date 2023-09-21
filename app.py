@@ -10,7 +10,7 @@ from rq import Queue
 import json
 
 
-app = Flask(__name__, static_folder="frontend/build/static", template_folder="frontend/build")
+app = Flask(__name__, static_folder="frontend/build", template_folder="frontend/build")
 
 # PostgreSQL connection configuration
 DATABASE_URL = os.environ.get('DATABASE_URL', 'postgresql://postgres:Sfogliatelle1209!@localhost/postgres')
@@ -115,7 +115,7 @@ def index():
 @app.route('/', defaults={'path': ''})
 @app.route('/<path:path>')
 def catch_all(path):
-    return send_from_directory('frontend/build', 'index.html')
+    return send_from_directory('frontend/build', path if path else 'index.html')
 
 
 @app.route('/get-movies')
