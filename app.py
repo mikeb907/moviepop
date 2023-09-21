@@ -8,6 +8,7 @@ import logging
 import redis
 from rq import Queue
 import json
+import ssl
 
 
 app = Flask(__name__, static_folder="frontend/build", template_folder="frontend/build")
@@ -22,9 +23,8 @@ app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URL
 
 # Setup Redis
 redis_url = os.getenv("REDIS_URL", "redis://localhost:6379")
-redis_conn = redis.from_url(redis_url, ssl_cert_reqs='required', ssl_ca_certs='./rds-combined-ca-bundle.pem')
+redis_conn = redis.from_url(redis_url, ssl_cert_reqs=ssl.CERT_NONE)
 q = Queue(connection=redis_conn)
-
 
 # Initialize CORS to allow all origins
 CORS(app, resources={r"/*": {"origins": "*"}})
