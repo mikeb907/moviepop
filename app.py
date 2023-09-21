@@ -5,6 +5,10 @@ import random
 import os
 from datetime import datetime, timedelta
 import logging
+import redis
+from rq import Queue
+import json
+
 
 app = Flask(__name__, static_folder="frontend/build/static", template_folder="frontend/build")
 
@@ -15,6 +19,11 @@ if DATABASE_URL.startswith("postgres://"):
     DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
 
 app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URL
+
+# Setup Redis
+redis_url = os.getenv("REDIS_URL", "redis://localhost:6379")
+redis_conn = redis.from_url(redis_url)
+q = Queue(connection=redis_conn)
 
 # Initialize CORS to allow all origins
 CORS(app, resources={r"/*": {"origins": "*"}})
@@ -48,18 +57,21 @@ daily_movies_cache = None
 last_updated_date = None
 
 def get_daily_movies():
-    global daily_movies_cache, last_updated_date
+    # Get the date
+    today = datetime.utcnow().date().strftime('%Y-%m-%d')
     
-    # Check if we already have movies for today
-    today = datetime.utcnow().date()
-    if daily_movies_cache and last_updated_date == today:
-        return daily_movies_cache
+    # Try to get movies data from Redis
+    movies_data = redis_conn.get(today)
+    
+    # If found in Redis, decode and return it
+    if movies_data:
+        return json.loads(movies_data)
 
+    # If not found in Redis, then compute the movies
     week_ago = datetime.utcnow() - timedelta(days=7)
     
     # Filter movies that were not shown in the past week and are not active.
     movies = Movie.query.filter((Movie.last_shown < week_ago) | (Movie.last_shown == None), Movie.is_active == False).all()
-
     all_titles = [movie.title for movie in Movie.query.all()]  # Fetch all movie titles
 
     if len(movies) < 3:
@@ -88,11 +100,11 @@ def get_daily_movies():
 
     db.session.commit()
 
-    # Update the cache and the date
-    daily_movies_cache = movies_data
-    last_updated_date = today
+    # Store the movies data in Redis for today
+    redis_conn.set(today, json.dumps(movies_data))
 
     return movies_data
+
 
 
 
