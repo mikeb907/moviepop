@@ -1,16 +1,16 @@
 {
   "files": {
-    "main.css": "/static/css/main.a93e7788.css",
-    "main.js": "/static/js/main.407a97e9.js",
+    "main.css": "/static/css/main.7386f785.css",
+    "main.js": "/static/js/main.3c588f21.js",
     "static/js/787.cda612ba.chunk.js": "/static/js/787.cda612ba.chunk.js",
     "static/media/moviepop-logo.png": "/static/media/moviepop-logo.477f1133d9e55846fb12.png",
     "index.html": "/index.html",
-    "main.a93e7788.css.map": "/static/css/main.a93e7788.css.map",
-    "main.407a97e9.js.map": "/static/js/main.407a97e9.js.map",
+    "main.7386f785.css.map": "/static/css/main.7386f785.css.map",
+    "main.3c588f21.js.map": "/static/js/main.3c588f21.js.map",
     "787.cda612ba.chunk.js.map": "/static/js/787.cda612ba.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.a93e7788.css",
-    "static/js/main.407a97e9.js"
+    "static/css/main.7386f785.css",
+    "static/js/main.3c588f21.js"
   ]
 }

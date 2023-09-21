@@ -4,6 +4,18 @@ import ReactDOM from 'react-dom';
 import App from './components/App/App';
 import reportWebVitals from './reportWebVitals';
 
+const setVH = () => {
+  const vh = window.innerHeight * 0.01;
+  document.documentElement.style.setProperty('--vh', `${vh}px`);
+};
+
+// Call the function initially
+setVH();
+
+// Update the variable whenever the window is resized or the orientation changes
+window.addEventListener('resize', setVH);
+window.addEventListener('orientationchange', setVH);
+
 // const root = ReactDOM.createRoot(document.getElementById('root'));
 // root.render(
 //   <React.StrictMode>
