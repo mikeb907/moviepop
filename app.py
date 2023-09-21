@@ -6,12 +6,16 @@ import os
 from datetime import datetime, timedelta
 import logging
 import redis
+from urllib.parse import urlparse
 from rq import Queue
 import json
 import ssl
 
 
 app = Flask(__name__, static_folder="frontend/build", template_folder="frontend/build")
+
+app.secret_key = 'Sfogliatelle120902061992!'
+
 
 # PostgreSQL connection configuration
 DATABASE_URL = os.environ.get('DATABASE_URL', 'postgresql://postgres:Sfogliatelle1209!@localhost/postgres')
@@ -20,11 +24,39 @@ if DATABASE_URL.startswith("postgres://"):
     DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
 
 app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URL
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-# Setup Redis
+
+# # Setup Redis
+
 redis_url = os.getenv("REDIS_URL", "redis://localhost:6379")
-redis_conn = redis.from_url(redis_url, ssl_cert_reqs=ssl.CERT_NONE)
+url = urlparse(redis_url)
+if url.scheme == 'rediss':  # Indicates SSL
+    pool = redis.ConnectionPool(
+        host=url.hostname,
+        port=url.port,
+        password=url.password,
+        ssl=True,
+        ssl_cert_reqs=ssl.CERT_NONE
+    )
+else:
+    pool = redis.ConnectionPool(
+        host=url.hostname,
+        port=url.port,
+        password=url.password
+    )
+
+redis_conn = redis.Redis(connection_pool=pool)
 q = Queue(connection=redis_conn)
+
+# redis_url = os.getenv("REDIS_URL", "redis://localhost:6379")
+# redis_conn = redis.from_url(redis_url, ssl_cert_reqs=ssl.CERT_NONE)
+# q = Queue(connection=redis_conn)
+
+
+
+
+
 
 # Initialize CORS to allow all origins
 CORS(app, resources={r"/*": {"origins": "*"}})
@@ -72,7 +104,11 @@ def get_daily_movies():
     week_ago = datetime.utcnow() - timedelta(days=7)
     
     # Filter movies that were not shown in the past week and are not active.
-    movies = Movie.query.filter((Movie.last_shown < week_ago) | (Movie.last_shown == None), Movie.is_active == False).all()
+            # movies = Movie.query.filter((Movie.last_shown < week_ago) | (Movie.last_shown == None), Movie.is_active == False).all()
+    
+    from sqlalchemy import or_
+
+    movies = Movie.query.filter(or_(Movie.last_shown < week_ago, Movie.last_shown == None), Movie.is_active == False).all()
     all_titles = [movie.title for movie in Movie.query.all()]  # Fetch all movie titles
 
     if len(movies) < 3:
