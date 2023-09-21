@@ -22,8 +22,9 @@ app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URL
 
 # Setup Redis
 redis_url = os.getenv("REDIS_URL", "redis://localhost:6379")
-redis_conn = redis.from_url(redis_url, ssl_cert_reqs='required')
+redis_conn = redis.from_url(redis_url, ssl_cert_reqs='required', ssl_ca_certs='./rds-combined-ca-bundle.pem')
 q = Queue(connection=redis_conn)
+
 
 # Initialize CORS to allow all origins
 CORS(app, resources={r"/*": {"origins": "*"}})
