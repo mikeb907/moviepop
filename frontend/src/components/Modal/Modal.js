@@ -221,7 +221,7 @@ function Modal({ isOpen, onClose, type, statistics }) {
                                 <p>
                                     A new game is released daily at midnight. All rights to images go to the rightful owners, no copyright infringement intended.
                                 </p>
-                                <p >View our <a href="/privacy"onClick={(e) => { e.preventDefault(); setModalType('privacyPolicy'); }}>privacy policy</a>.</p> 
+                                <p >View our <a href="/privacy" onClick={handlePrivacyClick}>privacy policy</a>.</p> 
                             </div>
                             
                         </div>; 
