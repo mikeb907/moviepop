@@ -29,29 +29,29 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # # Setup Redis
 
-redis_url = os.getenv("REDIS_URL", "redis://localhost:6379")
-url = urlparse(redis_url)
-if url.scheme == 'rediss':  # Indicates SSL
-    pool = redis.ConnectionPool(
-        host=url.hostname,
-        port=url.port,
-        password=url.password,
-        ssl=True,
-        ssl_cert_reqs=ssl.CERT_NONE
-    )
-else:
-    pool = redis.ConnectionPool(
-        host=url.hostname,
-        port=url.port,
-        password=url.password
-    )
-
-redis_conn = redis.Redis(connection_pool=pool)
-q = Queue(connection=redis_conn)
-
 # redis_url = os.getenv("REDIS_URL", "redis://localhost:6379")
-# redis_conn = redis.from_url(redis_url, ssl_cert_reqs=ssl.CERT_NONE)
+# url = urlparse(redis_url)
+# if url.scheme == 'rediss':  # Indicates SSL
+#     pool = redis.ConnectionPool(
+#         host=url.hostname,
+#         port=url.port,
+#         password=url.password,
+#         ssl=True,
+#         ssl_cert_reqs=ssl.CERT_NONE
+#     )
+# else:
+#     pool = redis.ConnectionPool(
+#         host=url.hostname,
+#         port=url.port,
+#         password=url.password
+#     )
+
+# redis_conn = redis.Redis(connection_pool=pool)
 # q = Queue(connection=redis_conn)
+
+redis_url = os.getenv("REDIS_URL", "redis://localhost:6379")
+redis_conn = redis.from_url(redis_url, ssl_cert_reqs=ssl.CERT_NONE)
+q = Queue(connection=redis_conn)
 
 
 
