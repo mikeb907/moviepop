@@ -115,7 +115,10 @@ def index():
 @app.route('/', defaults={'path': ''})
 @app.route('/<path:path>')
 def catch_all(path):
-    return send_from_directory('frontend/build', path if path else 'index.html')
+    if path != "" and os.path.exists(os.path.join("frontend/build", path)):
+        return send_from_directory('frontend/build', path)
+    else:
+        return send_from_directory('frontend/build', 'index.html')
 
 
 @app.route('/get-movies')
