@@ -145,5 +145,10 @@ def initdb():
     db.create_all()
     return 'Database tables created!', 200
 
+@app.route('/.git/<path:dummy>', methods=['GET', 'POST', 'PUT', 'DELETE'])
+def block_git(dummy):
+    return "Not accessible", 403
+
+
 if __name__ == '__main__':
     app.run(host='127.0.0.1', port=5000, debug=True, threaded=True)
