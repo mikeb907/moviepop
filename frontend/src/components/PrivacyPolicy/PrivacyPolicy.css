@@ -1,0 +1,19 @@
+/* components/PrivacyPolicy/PrivacyPolicy.css */
+
+.privacy {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding-top: 64px;
+}
+
+.spacer {
+    padding-top: 48px;
+}
+
+.popcorn-header {
+    font-size: 36px;
+    margin: 0;
+}
+
+/* Add more styles as needed */

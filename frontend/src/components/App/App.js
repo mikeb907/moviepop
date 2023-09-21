@@ -3,6 +3,8 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import './App.css';
 import HomeMenu from '../HomeMenu/HomeMenu';
 import GameScreen from '../GameScreen/GameScreen';
+import PrivacyPolicy from '../PrivacyPolicy/PrivacyPolicy';  // <-- Import the new component here
+
 
 function App() {
 
@@ -32,6 +34,7 @@ function App() {
                 <Routes>
                     <Route path="/" element={<HomeMenu />} />
                     <Route path="/game" element={<GameScreen />} />
+                    <Route path="/privacy" element={<PrivacyPolicy />} />  {/* <-- Add this new route */}
                 </Routes>
             </div>
         </Router>

@@ -1,23 +1,51 @@
 // Modal.js
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import './Modal.css';
 import { X } from 'react-feather';  // Importing Feather icons
 
 function Modal({ isOpen, onClose, type, statistics }) {  
+
+    console.log("Is modal open?", isOpen);
+
+    const modalContentRef = useRef(null);
+    const [modalType, setModalType] = useState(() => type);
+
+
     const handleFeedbackClick = () => {
         window.location.href = "mailto:hello@moviepop.cc?subject=Feedback on MoviePop";
     };
     
     const handlePrivacyClick = () => {
-        window.open("https://moviepop.cc/policy", "_blank");
+        window.open("/privacy", "_blank");
     };
+    
+    
+
+
+    // Modal Animation
+    // const [closing, setClosing] = useState(false);
+
+    const handleClose = (e) => {
+        // If the click is outside the modal content, close the modal
+        if (modalContentRef.current && !modalContentRef.current.contains(e.target)) {
+            onClose();
+        }
+    };
+    
+    
+    
+    
+    
+    
+
 
     // Statistics states
     const [statisticsData, setStatisticsData] = useState(null);
     const [statisticsCalculated, setStatisticsCalculated] = useState(false);
 
     const fetchStatisticsFromLocalStorage = () => {
+
         const oneDay = 24 * 60 * 60 * 1000; // milliseconds in one day
         const now = new Date();
         const data = [];
@@ -37,6 +65,12 @@ function Modal({ isOpen, onClose, type, statistics }) {
     const calculateStatistics = (data) => {
         const scoreForGame = game => {
             const numberCorrect = game.selectedTitles && game.movies ? game.selectedTitles.filter((title, index) => title === game.movies[index].title).length : 0;
+            console.log("Game's score:", {game, score: {
+                3: '🍿🍿🍿',
+                2: '🍿🍿🍅',
+                1: '🍿🍅🍅',
+                0: '🍅🍅🍅'
+            }[numberCorrect]});
             return {
                 3: '🍿🍿🍿',
                 2: '🍿🍿🍅',
@@ -44,6 +78,7 @@ function Modal({ isOpen, onClose, type, statistics }) {
                 0: '🍅🍅🍅'
             }[numberCorrect];
         };
+        
         
         if (!data || data.length === 0) {
             return {
@@ -70,23 +105,30 @@ function Modal({ isOpen, onClose, type, statistics }) {
         });
 
         const totalGames = data.length;
-        let totalAnimated = 0;
-        let correctAnimated = 0;
 
-        data.forEach(game => {
-            totalAnimated += game.animatedIndices ? game.animatedIndices.length : 0;  
-            correctAnimated += game.animatedIndices ? game.animatedIndices.filter(index => game.movies[index].title === game.selectedTitles[index]).length : 0;
-        });
+        // let totalAnimated = 0;
+        // let correctAnimated = 0;
 
-        const wins = data.filter(game => game.animatedIndices && game.animatedIndices.length === 3).length;
+        // data.forEach(game => {
+        //     totalAnimated += game.animatedIndices ? game.animatedIndices.length : 0;  
+        //     correctAnimated += game.animatedIndices ? game.animatedIndices.filter(index => game.movies[index].title === game.selectedTitles[index]).length : 0;
+        // });
+
+        const wins = data.filter(game => scoreForGame(game) !== '🍅🍅🍅').length;
+        console.log("Total games:", totalGames);  // Added this log
+        console.log("Wins:", wins);               // Added this log
+        console.log("Games considered as wins:", data.filter(game => game.animatedIndices && game.animatedIndices.length >= 1));
+
         const winPercentage = totalGames !== 0 ? (wins / totalGames) * 100 : 0;
+        console.log("Win Percentage:", winPercentage);  // Added this log
+
 
         let winStreak = 0;
         let maxStreak = 0;
         let currentStreak = 0;
 
         for (const game of data) {
-            if (game.animatedIndices && game.animatedIndices.length === 3) {
+            if (scoreForGame(game) !== '🍅🍅🍅') {  // Checking if the score is not three tomatoes
                 currentStreak++;
                 winStreak = currentStreak;
             } else {
@@ -115,16 +157,30 @@ function Modal({ isOpen, onClose, type, statistics }) {
     };
 
     useEffect(() => {
-        if (isOpen && type === 'statistics') {
+        console.log("Setting modalType to", type);
+        setModalType(type);
+    }, [type]);
+    
+    useEffect(() => {
+        if (!isOpen) {
+            console.log("Modal is closed. Resetting modalType to 'settings'");
+            // setModalType('settings');
+        }
+    }, [isOpen]);
+    
+
+    useEffect(() => {
+        if (isOpen && modalType === 'statistics') {
             if (!statisticsCalculated) {
                 const fetchedData = fetchStatisticsFromLocalStorage();
+                console.log("Fetched game data:", fetchedData);  // Added this log
                 const stats = calculateStatistics(fetchedData);
                 setStatisticsData(stats);
                 setStatisticsCalculated(true);
                 console.log("Fetched from local storage:", fetchedData);
             }
         }
-    }, [type, isOpen]);
+    }, [modalType, isOpen, statisticsCalculated]);
 
     useEffect(() => {
         if (!isOpen) {
@@ -136,10 +192,14 @@ function Modal({ isOpen, onClose, type, statistics }) {
    
     
     const getContent = () => {
-        switch(type) {
+        console.log("Current modalType:", modalType);
+        console.log("Rendering content for modalType:", modalType);
+
+        switch(modalType) {
+            
             case 'howToPlay':
-                return <div class="how-to-play">
-                            <div class="close-bar"><X color="#4F4F4F" cursor="pointer" className="modal-close-icon" onClick={onClose} /></div>
+                return <div className="how-to-play">
+                            <div className="close-bar"><X color="#4F4F4F" cursor="pointer" className="modal-close-icon" onClick={onClose} /></div>
                             
                             <h1>How to Play</h1>
                             
@@ -156,27 +216,29 @@ function Modal({ isOpen, onClose, type, statistics }) {
                             <h1>🍿 🍅 🍿</h1>
                             <p><span style={{color: "#F7E08E"}}>Popcorn</span> (🍿) means you guessed that movie right, but the <span style={{color: "#FF8E8E"}}>tomato</span> (🍅) means you guessed incorrectly... choose wisely.</p>
                             
-                            <div class="divider"></div>
-                            <div class="disclaimer">
+                            <div className="divider"></div>
+                            <div className="disclaimer">
                                 <p>
                                     A new game is released daily at midnight. All rights to images go to the rightful owners, no copyright infringement intended.
                                 </p>
-                                <p >View our <a href="#your-privacy-policy-link">privacy policy</a>.</p> {/* Placeholder link for privacy policy */}
+                                <p >View our <a href="/privacy"onClick={(e) => { e.preventDefault(); setModalType('privacyPolicy'); }}>privacy policy</a>.</p> 
                             </div>
                             
                         </div>; 
 
             case 'settings':
-                return <div class="settings">
-                            <div class="close-bar"><X color="#4F4F4F" cursor="pointer" className="modal-close-icon" onClick={onClose} /></div>
+                return <div className="settings">
+                            <div className="close-bar"><X color="#4F4F4F" cursor="pointer" className="modal-close-icon" onClick={onClose} /></div>
                             <h1>Settings</h1>
-                            <div class="menu-buttons-settings">
+                            <div className="menu-buttons-settings">
                                 <button onClick={handleFeedbackClick}>Feedback</button>
                                 <button onClick={handlePrivacyClick}>Privacy Policy</button>
                             </div>
                             
 
                         </div>; 
+
+
             case 'statistics':
                 if (!statisticsData) {
                     return <div>Loading...</div>;  // or any other placeholder/loading component you'd like
@@ -231,14 +293,32 @@ function Modal({ isOpen, onClose, type, statistics }) {
     }
 
     return (
-        <div className="modal-overlay" onClick={onClose}>
-            {/* Add the 'active' class when the modal is open */}
-            <div className={isOpen ? "modal-content active" : "modal-content"} onClick={e => e.stopPropagation()}>
-
+        <div 
+            className={`modal-overlay ${isOpen ? 'active' : ''}`} 
+            onClick={handleClose}
+        >
+            <div 
+                ref={modalContentRef}
+                className={`modal-content ${isOpen ? 'active' : ''}`} 
+                // onClick={e => e.stopPropagation()}
+            >
                 {getContent()}   
             </div>
         </div>
     );
-}
 
+    // if (!isOpen) {
+    //     return null;
+    // }
+    
+    // return (
+    //     <div className="modal-overlay">
+    //         <div className="modal-content">
+    //             Hello, this is a test modal!
+    //         </div>
+    //     </div>
+    // );
+    
+    
+}
 export default Modal;

@@ -100,6 +100,12 @@ def get_daily_movies():
 def index():
     return send_from_directory('frontend/build', 'index.html')
 
+@app.route('/', defaults={'path': ''})
+@app.route('/<path:path>')
+def catch_all(path):
+    return send_from_directory('frontend/build', 'index.html')
+
+
 @app.route('/get-movies')
 def get_movies():
     try:
