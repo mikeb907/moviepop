@@ -28,7 +28,7 @@ function HomeMenu(props) {
             </div>
 
             <div className="background-video">
-                <video autoPlay muted loop>
+                <video playsInLine autoPlay muted loop>
                     <source src="https://concessionstand.nyc3.cdn.digitaloceanspaces.com/concessionstand/homemenu/updatedvideo.mov" type="video/mp4"/>
                 </video>
             </div>
