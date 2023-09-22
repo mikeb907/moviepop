@@ -44,7 +44,7 @@ function HomeMenu(props) {
             </div>
 
             <div className="background-video">
-                <video ref={videoRef} playsInline autoPlay muted loop>
+                <video ref={videoRef} playsInline autoPlay muted loop preload="auto">
                     <source src="https://concessionstand.nyc3.cdn.digitaloceanspaces.com/concessionstand/homemenu/updatedvideo.mp4" type="video/mp4"/>
                 </video>
             </div>
