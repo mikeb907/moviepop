@@ -19,11 +19,20 @@ function HomeMenu(props) {
 
     return (
         <div className="home-menu">
+            
             <div className="menu-title">
-                <p className="date">{currentDate.toLocaleDateString(undefined, { month: 'long', day: 'numeric', year: 'numeric' })}</p>  {/* Fixed class to className */}
                 <img src={logo} alt="MoviePop Logo" />   {/* Replaced h1 with img */}
                 <p>the daily movie game</p>
+                <p className="date">{currentDate.toLocaleDateString(undefined, { month: 'long', day: 'numeric', year: 'numeric' })}</p>  {/* Fixed class to className */}
+
             </div>
+
+            <div className="background-video">
+                <video autoPlay muted loop>
+                    <source src="https://concessionstand.nyc3.cdn.digitaloceanspaces.com/concessionstand/homemenu/updatedvideo.mov" type="video/mp4"/>
+                </video>
+            </div>
+
             <div className="menu-buttons">
                 <button onClick={handleStartClick}>Start</button>
                 <button onClick={() => { console.log("How to Play Clicked"); setModalOpen(true); setModalType('howToPlay'); }}>How to Play</button>

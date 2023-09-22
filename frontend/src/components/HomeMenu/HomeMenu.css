@@ -1,28 +1,53 @@
 /* components/HomeMenu/HomeMenu.css */
 
 .home-menu {
-    align-items: center;
     display: flex;
     flex-direction: column;
     height: calc(100 * var(--vh));
-    justify-content: space-between;
     width: 100%;
+    align-items: center;
+    justify-content: space-between; /* to align items to the top */
 }
+
+.background-video {
+    width: calc(100% + 40px);
+    margin-left: -18px;
+    height: 32vh;
+    overflow: hidden;
+    margin-right: -18px;
+    position: relative;
+}
+
+.background-video video {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    max-width: none; /* Ensuring the video scales */
+    min-width: 100%;
+    width: 100%;
+    height: auto;
+    transform: translate(-50%, -50%);
+    object-fit: cover;
+}
+
+
+
 
 
 .menu-title {
     max-width: 100%;
     height: auto;
-    flex: 1;
+    /* flex: 1; */
     display: flex;
     align-items: center;
     justify-content: center;
     flex-direction: column;
+    padding-top: 40px;
 }
 
 
 .menu-title img {
-    width: 216px;
+    width: 140px;
 }
 
 .menu-title p {
@@ -33,6 +58,9 @@
     opacity: .5;
     font-family: 'Inconsolata', monospace;
     font-weight: 600;
+    margin-top: -8px;
+    margin-bottom: 0px;
+    
 
 }
 
@@ -49,7 +77,7 @@
     border: none;
     outline: none;
     cursor: pointer;
-    background-color: #000;  /* Default button color */
+    background-color: rgba(0, 0, 0, 0);  /* Default button color */
     color: #fff;
     border: solid 1px #fff;
     font-family: 'Inconsolata', monospace;
@@ -80,6 +108,10 @@
     .home-menu {
         width: 100%; /* Ensure it takes up the full width */
         justify-content: center; /* This will center the children vertically */
+        height: 100%;
+        padding-top: 0px;
+        gap: 24px;
+
     }
 
     .menu-buttons {
