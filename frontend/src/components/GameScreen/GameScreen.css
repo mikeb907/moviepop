@@ -278,7 +278,7 @@ components/GameScreen/GameScreen.css
     height: 56px;
     padding: 0 16px;
     gap: 8px;
-    padding-bottom: 16px;
+    padding-bottom: 32px;
 }
 
 /* .prev-arrow, .next-arrow {
