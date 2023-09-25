@@ -175,6 +175,12 @@ function GameScreen() {
                 const data = fetchStatisticsFromLocalStorage();  
                 const stats = calculateStatistics(data);  
                 setLatestStatistics(stats);
+
+                // After storing the game data in localStorage, trigger the statistics modal
+                const totalAnimationDuration = stillsData.length * 200; // considering 200ms delay for each emoji animation
+                setTimeout(() => {
+                    setIsModalOpen(true);
+                }, totalAnimationDuration);
             }
         }, 200);
     };
@@ -207,12 +213,46 @@ function GameScreen() {
     }
 
     // Updated handleShare function
+    // const handleShare = () => {
+    //     const numberCorrect = selectedTitles.filter((title, index) => title === stillsData[index].title).length;
+    //     const emojiScore = getEmojiScore();
+
+    //     const shareMessage = `MoviePop #${gameNumber} • ${numberCorrect}/3\n\n${emojiScore}`;
+
+    //     if (navigator.share) {
+    //         navigator.share({
+    //             title: 'My MoviePop Results',
+    //             text: shareMessage,
+    //         })
+    //         .then(() => console.log('Successful share'))
+    //         .catch((error) => console.log('Error sharing', error));
+    //     } else {
+    //         // Fallback: Copy the share message to the clipboard
+    //         copyToClipboard(shareMessage);
+    //         alert("Your score was copied to clipboard");
+    //     }
+    // };
+
+
     const handleShare = () => {
+        // Get the current date
+        const currentDate = new Date();
+    
+        // Determine the start date of MoviePop as September 25th, 2023
+        const startDate = new Date("2023-09-25");
+    
+        // Calculate the difference in days between the current date and the start date
+        const diffTime = Math.abs(currentDate - startDate);
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    
+        // Use the difference in days as the game number
+        const gameNumber = diffDays;
+    
         const numberCorrect = selectedTitles.filter((title, index) => title === stillsData[index].title).length;
         const emojiScore = getEmojiScore();
-
+    
         const shareMessage = `MoviePop #${gameNumber} • ${numberCorrect}/3\n\n${emojiScore}`;
-
+    
         if (navigator.share) {
             navigator.share({
                 title: 'My MoviePop Results',
@@ -226,6 +266,9 @@ function GameScreen() {
             alert("Your score was copied to clipboard");
         }
     };
+    
+    
+    
 
     const selectTitle = (title) => {
         const updatedSelections = [...selectedTitles];
@@ -288,6 +331,8 @@ function GameScreen() {
             />
 
             <Modal isOpen={modalOpen} onClose={() => setModalOpen(false)} type={modalType} statistics={latestStatistics} />
+            {/* <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} type={modalType} statistics={latestStatistics} /> */}
+
 
 
 
