@@ -4,9 +4,8 @@ import './App.css';
 import HomeMenu from '../HomeMenu/HomeMenu';
 import GameScreen from '../GameScreen/GameScreen';
 import PrivacyPolicy from '../PrivacyPolicy/PrivacyPolicy';  // <-- Import the new component here
-import ReactGA from 'react-ga';
+import AnalyticsTracker from '../AnalyticsTracker/analyticsTracker'; // Adjust the path as necessary
 
-ReactGA.initialize('G-3CRZGVCEKY');
 
 
 
@@ -33,14 +32,15 @@ function App() {
     }, []); // Empty dependency array ensures this useEffect runs only once when the component mounts
 
     // Google Analytics tracking
-    let location = useLocation();
+    // let location = useLocation();
     
-    useEffect(() => {
-        ReactGA.pageview(location.pathname);
-    }, [location]);
+    // useEffect(() => {
+    //     ReactGA.pageview(location.pathname);
+    // }, [location]);
 
     return (
         <Router>
+            <AnalyticsTracker /> {/* Add this line */}
             <div className="App">
                 <Routes>
                     <Route path="/" element={<HomeMenu />} />
