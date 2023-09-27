@@ -1,9 +1,13 @@
 import React, { useEffect } from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom';
 import './App.css';
 import HomeMenu from '../HomeMenu/HomeMenu';
 import GameScreen from '../GameScreen/GameScreen';
 import PrivacyPolicy from '../PrivacyPolicy/PrivacyPolicy';  // <-- Import the new component here
+import ReactGA from 'react-ga';
+
+ReactGA.initialize('G-3CRZGVCEKY');
+
 
 
 function App() {
@@ -27,6 +31,13 @@ function App() {
             window.removeEventListener('resize', setVHProperty);
         };
     }, []); // Empty dependency array ensures this useEffect runs only once when the component mounts
+
+    // Google Analytics tracking
+    let location = useLocation();
+    
+    useEffect(() => {
+        ReactGA.pageview(location.pathname);
+    }, [location]);
 
     return (
         <Router>
