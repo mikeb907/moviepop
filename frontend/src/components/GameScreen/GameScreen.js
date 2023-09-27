@@ -105,7 +105,7 @@ function GameScreen() {
         if (hasSubmitted) {
             let index = 0;
             const interval = setInterval(() => {
-                console.log('Emoji update interval - Current index:', index);
+                // console.log('Emoji update interval - Current index:', index);
                 // setEmojiTransitionIndex(index);
                 index++;
                 if (index >= stillsData.length) {
@@ -126,12 +126,12 @@ function GameScreen() {
         
         const interval = setInterval(() => {
             if (index < stillsData.length) {
-                console.log('Checking answer for index:', index);
+                // console.log('Checking answer for index:', index);
                 
                 if (selectedTitles[index] === stillsData[index].title) {
-                    console.log('Correct answer for index:', index);
+                    // console.log('Correct answer for index:', index);
                 } else {
-                    console.log('Wrong answer for index:', index);
+                    // console.log('Wrong answer for index:', index);
                 }
                 newAnimatedIndices.push(index); 
                 setAnimatedIndices([...newAnimatedIndices]);
@@ -142,9 +142,9 @@ function GameScreen() {
                 // Determine the user's score based on correct answers
                 const numberCorrect = selectedTitles.filter((title, idx) => title === stillsData[idx].title).length;
     
-                console.log("Number of Correct Answers:", numberCorrect);
-                console.log("Selected Titles:", selectedTitles);
-                console.log("Actual Movies:", stillsData.map(movie => movie.title));
+                // console.log("Number of Correct Answers:", numberCorrect);
+                // console.log("Selected Titles:", selectedTitles);
+                // console.log("Actual Movies:", stillsData.map(movie => movie.title));
     
                 // Based on the number of correct answers, categorize the user's score
                 const scoreKey = {
@@ -310,15 +310,15 @@ function GameScreen() {
     };
 
     // Use the 'd' key to toggle developer mode on/off
-    useEffect(() => {
-        const handleKeyDown = (e) => {
-            if (e.key === 'd') {
-                setDevMode(prev => !prev);
-            }
-        };
-        window.addEventListener('keydown', handleKeyDown);
-        return () => window.removeEventListener('keydown', handleKeyDown);
-    }, []);
+    // useEffect(() => {
+    //     const handleKeyDown = (e) => {
+    //         if (e.key === 'd') {
+    //             setDevMode(prev => !prev);
+    //         }
+    //     };
+    //     window.addEventListener('keydown', handleKeyDown);
+    //     return () => window.removeEventListener('keydown', handleKeyDown);
+    // }, []);
 
     return (
         

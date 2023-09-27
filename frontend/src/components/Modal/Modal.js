@@ -1,6 +1,7 @@
 // Modal.js
 
 import React, { useState, useEffect, useRef } from 'react';
+import { CSSTransition } from 'react-transition-group';
 import './Modal.css';
 import { X } from 'react-feather';  // Importing Feather icons
 
@@ -9,7 +10,9 @@ function Modal({ isOpen, onClose, type, statistics }) {
     console.log("Is modal open?", isOpen);
 
     const modalContentRef = useRef(null);
-    const [modalType, setModalType] = useState(() => type);
+    // const [modalType, setModalType] = useState(() => type);
+    const [modalType, setModalType] = useState(type);
+
 
 
     const handleFeedbackClick = () => {
@@ -17,7 +20,7 @@ function Modal({ isOpen, onClose, type, statistics }) {
     };
     
     const handlePrivacyClick = () => {
-        window.open("/privacy", "_blank");
+        window.open("/privacy");
     };
     
     
@@ -293,18 +296,24 @@ function Modal({ isOpen, onClose, type, statistics }) {
     }
 
     return (
-        <div 
-            className={`modal-overlay ${isOpen ? 'active' : ''}`} 
-            onClick={handleClose}
+        <CSSTransition
+            in={isOpen}
+            timeout={300}
+            classNames="modal"
+            unmountOnExit
         >
             <div 
-                ref={modalContentRef}
-                className={`modal-content ${isOpen ? 'active' : ''}`} 
-                // onClick={e => e.stopPropagation()}
+                className={`modal-overlay ${isOpen ? 'active' : ''}`} 
+                onClick={handleClose}
             >
-                {getContent()}   
+                <div 
+                    ref={modalContentRef}
+                    className={`modal-content ${isOpen ? 'active' : ''}`} 
+                >
+                    {getContent()}   
+                </div>
             </div>
-        </div>
+        </CSSTransition>
     );
 
     // if (!isOpen) {
