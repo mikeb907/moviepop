@@ -92,57 +92,80 @@ daily_movies_cache = None
 last_updated_date = None
 
 def get_daily_movies():
-    # Get the date
-    today = datetime.utcnow().date().strftime('%Y-%m-%d')
-    
-    # Try to get movies data from Redis
-    movies_data = redis_conn.get(today)
-    
-    # If found in Redis, decode and return it
-    if movies_data:
-        return json.loads(movies_data)
+    try:
+        today = datetime.utcnow().date().strftime('%Y-%m-%d')
+        logging.info(f'Getting movies for date: {today}')
+        
+        movies_data = redis_conn.get(today)
+        if movies_data:
+            logging.info('Found movies in Redis cache')
+            return json.loads(movies_data)
 
-    # If not found in Redis, then compute the movies
-    week_ago = datetime.utcnow() - timedelta(days=7)
-    
-    # Filter movies that were not shown in the past week and are not active.
-            # movies = Movie.query.filter((Movie.last_shown < week_ago) | (Movie.last_shown == None), Movie.is_active == False).all()
-    
-    from sqlalchemy import or_
+        logging.info('No cache found, querying database...')
+        week_ago = datetime.utcnow() - timedelta(days=7)
+        
+        from sqlalchemy import or_
+        
+        # Log the query parameters
+        logging.info(f'Querying for movies not shown since: {week_ago}')
+        
+        movies = Movie.query.filter(
+            or_(Movie.last_shown < week_ago, Movie.last_shown == None),
+            Movie.is_active == False
+        ).all()
+        
+        logging.info(f'Found {len(movies)} eligible movies')
+        
+        if len(movies) < 3:
+            logging.error(f'Not enough eligible movies found (only found {len(movies)})')
+            return None
 
-    movies = Movie.query.filter(or_(Movie.last_shown < week_ago, Movie.last_shown == None), Movie.is_active == False).all()
-    all_titles = [movie.title for movie in Movie.query.all()]  # Fetch all movie titles
+        selected_movies = random.sample(movies, 3)
+        logging.info(f'Selected movies: {[movie.title for movie in selected_movies]}')
+        
+        movies_data = []
+        for selected_movie in selected_movies:
+            try:
+                random_titles = random.sample([title for title in all_titles if title != selected_movie.title], 2)
+                random_titles.append(selected_movie.title)
+                random.shuffle(random_titles)
+                
+                # Log the URL construction
+                original_url = selected_movie.still_url
+                filename = original_url.split('/')[-1]
+                correct_url = f"https://concessionstand.nyc3.digitaloceanspaces.com/concessionstand/{filename}"
+                
+                logging.info(f'Processing movie: {selected_movie.title}')
+                logging.info(f'Original URL: {original_url}')
+                logging.info(f'Constructed URL: {correct_url}')
 
-    if len(movies) < 3:
-        return None
+                movies_data.append({
+                    "title": selected_movie.title,
+                    "still_url": correct_url,
+                    "options": random_titles
+                })
+            except Exception as e:
+                logging.error(f"Error processing movie {selected_movie.title}: {str(e)}")
+                raise
 
-    selected_movies = random.sample(movies, 3)
-    movies_data = []
-
-    for selected_movie in selected_movies:
-        random_titles = random.sample([title for title in all_titles if title != selected_movie.title], 2)
-        random_titles.append(selected_movie.title)
-        random.shuffle(random_titles)
-
-        correct_url = "https://concessionstand.nyc3.digitaloceanspaces.com/concessionstand/" + selected_movie.still_url.split('/')[-1]
-
-        movies_data.append({
-            "title": selected_movie.title,
-            "still_url": correct_url,
-            "options": random_titles
-        })
-
-    # Update the movies' last_shown date and set them as active.
-    for movie in selected_movies:
-        movie.last_shown = datetime.utcnow()
-        movie.is_active = True
-
-    db.session.commit()
-
-    # Store the movies data in Redis for today
-    redis_conn.set(today, json.dumps(movies_data))
-
-    return movies_data
+        # Update movies in database
+        for movie in selected_movies:
+            movie.last_shown = datetime.utcnow()
+            movie.is_active = True
+        
+        db.session.commit()
+        
+        # Store in Redis
+        redis_conn.set(today, json.dumps(movies_data))
+        
+        return movies_data
+        
+    except Exception as e:
+        logging.error(f"Error in get_daily_movies: {str(e)}")
+        logging.error(f"Error type: {type(e)}")
+        import traceback
+        logging.error(f"Traceback: {traceback.format_exc()}")
+        raise
 
 
 
@@ -163,15 +186,21 @@ def catch_all(path):
 @app.route('/get-movies')
 def get_movies():
     try:
-        logging.info('Fetching movies...')
+        logging.info('Starting get-movies request...')
         movies_data = get_daily_movies()
+        logging.info(f'Retrieved movies_data: {movies_data}')
+        
         if not movies_data:
-            logging.error('Not enough movies to play the game!')
+            logging.error('No movies data returned')
             return {"error": "Not enough movies to play the game!"}, 404
+            
         return jsonify({'movies': movies_data})
     except Exception as e:
-        logging.error(f"Error while fetching movies: {e}")
-        return {"error": "Internal Server Error"}, 500
+        logging.error(f"Error while fetching movies: {str(e)}")
+        logging.error(f"Error type: {type(e)}")
+        import traceback
+        logging.error(f"Traceback: {traceback.format_exc()}")
+        return {"error": f"Internal Server Error: {str(e)}"}, 500
 
 @app.route('/game/setup/manual', methods=['POST'])
 def manual_game_setup():
@@ -206,6 +235,20 @@ def reset_movies():
         logging.error(f"Error resetting movies: {e}")
         return {"error": "Internal Server Error"}, 500
 
+@app.route('/test-redis')
+def test_redis():
+    try:
+        redis_conn.set('test', 'working')
+        result = redis_conn.get('test')
+        return jsonify({
+            'status': 'success',
+            'redis_test': result.decode('utf-8') if result else None
+        })
+    except Exception as e:
+        return jsonify({
+            'status': 'error',
+            'message': str(e)
+        }), 500
 
 if __name__ == '__main__':
     app.run(host='127.0.0.1', port=5000, debug=True, threaded=True)
