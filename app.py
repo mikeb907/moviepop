@@ -188,6 +188,24 @@ def initdb():
 def block_git(dummy):
     return "Not accessible", 403
 
+@app.route('/admin/reset-movies', methods=['POST'])
+def reset_movies():
+    try:
+        # Reset all movies that were shown more than 24 hours ago
+        yesterday = datetime.utcnow() - timedelta(days=1)
+        movies_to_reset = Movie.query.filter(
+            or_(Movie.last_shown < yesterday, Movie.is_active == True)
+        ).all()
+        
+        for movie in movies_to_reset:
+            movie.is_active = False
+        
+        db.session.commit()
+        return jsonify({"message": f"Reset {len(movies_to_reset)} movies"}), 200
+    except Exception as e:
+        logging.error(f"Error resetting movies: {e}")
+        return {"error": "Internal Server Error"}, 500
+
 
 if __name__ == '__main__':
     app.run(host='127.0.0.1', port=5000, debug=True, threaded=True)
