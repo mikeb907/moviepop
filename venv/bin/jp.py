@@ -1,4 +1,4 @@
-#!/Users/michaelbattaglia/moviepop/venv/bin/python3
+#!/Users/michaelbattaglia/moviepop/venv/bin/python
 
 import sys
 import json
